@@ -277,19 +277,9 @@ class _DetailScreenState extends State<DetailScreen> {
           children: [
             Container(
               child: ElevatedButton(
-                onPressed: () async {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  String? idUser = await prefs.getString('id_user');
-
-                  await TicketRepository().orderTicket(
-                      Ticket(
-                          idDestinasi: showDestinasi!.id,
-                          jumlahTicket: '2',
-                          tanggalTicket: '2022-02-12',
-                          totalHarga:
-                              '${int.parse('2') * int.parse(showDestinasi!.hargaTiketMasuk!)}'),
-                      idUser!);
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .pushNamed("/order");
                 },
                 style: ButtonStyle(
                   visualDensity: VisualDensity.adaptivePlatformDensity,

@@ -137,3 +137,16 @@ List<Destinasi> dummyDestinasi = [
         'Grojogan Sewu Waterfall, adalah keindahan alam tersembunyi yang memikat di kawasan Yogyakarta. Air terjun ini membentuk tirai air yang spektakuler, menciptakan pemandangan yang menakjubkan dan menyejukkan bagi siapa pun yang datang mengunjunginya. Dikelilingi oleh hutan hijau dan nuansa alam yang tenang, Grojogan Sewu adalah tempat yang sempurna untuk melarikan diri sejenak dari hiruk-pikuk kehidupan sehari-hari dan menikmati keajaiban alam yang alami.',
   ),
 ];
+
+// SharedPreferences prefs =
+//                       await SharedPreferences.getInstance();
+//                   String? idUser = await prefs.getString('id_user');
+
+//                   await TicketRepository().orderTicket(
+//                       Ticket(
+//                           idDestinasi: showDestinasi!.id,
+//                           jumlahTicket: '2',
+//                           tanggalTicket: '2022-02-12',
+//                           totalHarga:
+//                               '${int.parse('2') * int.parse(showDestinasi!.hargaTiketMasuk!)}'),
+//                       idUser!);
