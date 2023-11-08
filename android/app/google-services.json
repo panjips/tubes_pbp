@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "604072871310",
+    "project_id": "final-project-pbp",
+    "storage_bucket": "final-project-pbp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:604072871310:android:31c160ca762d40eb1d10df",
+        "android_client_info": {
+          "package_name": "com.example.test_slicing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYvDSr-FaqdOQgS3Q1ZOl3XuufjZIijIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
