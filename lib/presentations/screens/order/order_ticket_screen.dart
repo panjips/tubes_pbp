@@ -8,6 +8,7 @@ import 'package:test_slicing/data/repository/destinasi_respository.dart';
 import 'package:test_slicing/utils/constant.dart';
 import 'package:test_slicing/utils/data_dummy.dart';
 import 'package:test_slicing/data/repository/ticket_repository.dart';
+import 'package:test_slicing/easy_date_timeline.dart';
 
 class OrderTicketScreen extends StatefulWidget {
   const OrderTicketScreen({super.key});
@@ -21,6 +22,9 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
   TextEditingController tanggalTicket = TextEditingController();
   TextEditingController jumlahTicket = TextEditingController();
   TextEditingController totalHargaTicket = TextEditingController();
+
+ final EasyInfiniteDateTimelineController _controller = EasyInfiniteDateTimelineController();
+  DateTime _focusedDate = DateTime.now();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -138,78 +142,139 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                             SizedBox(
                               height: 12,
                             ),
-                            TextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Tanggal Lahir Tidak Boleh Kosong';
-                                }
-                                try {
-                                  DateTime selectedDate = DateTime.parse(value);
-                                  int year = selectedDate.year;
-                                  if (year < 1970 || year > 2023) {
-                                    return 'Tahun lahir harus antara 1970 dan 2023';
-                                  }
-                                } catch (error) {
-                                  return 'Format tanggal tidak valid';
-                                }
-                                return null;
+                            // EasyInfiniteDateTimeLine(
+                            //   controller: _controller,
+                            //   firstDate: DateTime.now(), 
+                            //   focusDate: _focusedDate, 
+                            //   lastDate: DateTime(2025),
+                            //   onDateChange: (selectedDate) {
+                            //     setState(() {
+                            //       _focusedDate = selectedDate;
+                            //       tanggalTicket.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+                            //     });
+                            //   },
+                            //   activeColor: Colors.blue,
+                            //   dayProps: const EasyDayProps(
+                            //     borderColor: Colors.blue,
+                            //     height: 56.0,
+                            //     width: 56.0,
+                            //     dayStructure: DayStructure.dayStrDayNumMonth,
+                            //     inactiveDayStyle: DayStyle(
+                            //       dayNumStyle: TextStyle(
+                            //         fontSize: 18.0,
+                            //       ),
+                            //     ),
+                            //     activeDayStyle: DayStyle(
+                            //       dayNumStyle: TextStyle(
+                            //         fontSize: 18.0,
+                            //         fontWeight: FontWeight.bold,
+                            //         color: Colors.white
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            EasyDateTimeLine(
+                              initialDate: DateTime.now(),
+                              onDateChange: (selectedDate) {
+                                setState(() {
+                                tanggalTicket.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+                                });
                               },
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              textAlignVertical: TextAlignVertical.center,
-                              controller: tanggalTicket,
-                              style: const TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                color: slate900,
+                              activeColor: Colors.blue,
+                              headerProps: const EasyHeaderProps(
+                                selectedDateFormat: SelectedDateFormat.fullDateDMonthAsStrY,
+                                monthPickerType: MonthPickerType.switcher,
                               ),
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                hintText: "Tanggal Pesanan",
-                                hintStyle: const TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  color: slate400,
+                              dayProps: const EasyDayProps(
+                                height: 56.0,
+                                width: 56.0,
+                                dayStructure: DayStructure.dayStrDayNum,
+                                inactiveDayStyle: DayStyle(
+                                  dayNumStyle: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
                                 ),
-                                errorStyle: const TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 10,
-                                  color: Colors.red,
-                                ),
-                                suffixIcon: IconButton(
-                                  onPressed: () async {
-                                    DateTime? pickedDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(
-                                          1900), // Set an appropriate minimum date
-                                      lastDate: DateTime.now(),
-                                    );
-                                    if (pickedDate != null) {
-                                      String formattedDate =
-                                          DateFormat('yyyy-MM-dd')
-                                              .format(pickedDate);
-                                      setState(() {
-                                        tanggalTicket.text = formattedDate;
-                                      });
-                                    }
-                                  },
-                                  icon:
-                                      const Icon(Icons.calendar_month_rounded),
-                                ),
-                                filled: true,
-                                fillColor: Colors.white,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: slate300),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                activeDayStyle: DayStyle(
+                                  dayNumStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
+                            // TextFormField(
+                            //   validator: (value) {
+                            //     if (value == null || value.isEmpty) {
+                            //       return 'Tanggal Lahir Tidak Boleh Kosong';
+                            //     }
+                            //     try {
+                            //       DateTime selectedDate = DateTime.parse(value);
+                            //       int year = selectedDate.year;
+                            //       if (year < 1970 || year > 2023) {
+                            //         return 'Tahun lahir harus antara 1970 dan 2023';
+                            //       }
+                            //     } catch (error) {
+                            //       return 'Format tanggal tidak valid';
+                            //     }
+                            //     return null;
+                            //   },
+                            //   autovalidateMode:
+                            //       AutovalidateMode.onUserInteraction,
+                            //   textAlignVertical: TextAlignVertical.center,
+                            //   controller: tanggalTicket,
+                            //   style: const TextStyle(
+                            //     fontFamily: "Poppins",
+                            //     fontSize: 14,
+                            //     color: slate900,
+                            //   ),
+                            //   decoration: InputDecoration(
+                            //     contentPadding:
+                            //         const EdgeInsets.symmetric(horizontal: 12),
+                            //     hintText: "Tanggal Pesanan",
+                            //     hintStyle: const TextStyle(
+                            //       fontFamily: "Poppins",
+                            //       fontSize: 14,
+                            //       color: slate400,
+                            //     ),
+                            //     errorStyle: const TextStyle(
+                            //       fontFamily: "Poppins",
+                            //       fontWeight: FontWeight.w600,
+                            //       fontSize: 10,
+                            //       color: Colors.red,
+                            //     ),
+                            //     suffixIcon: IconButton(
+                            //       onPressed: () async {
+                            //         DateTime? pickedDate = await showDatePicker(
+                            //           context: context,
+                            //           initialDate: DateTime.now(),
+                            //           firstDate: DateTime(
+                            //               1900), // Set an appropriate minimum date
+                            //           lastDate: DateTime.now(),
+                            //         );
+                            //         if (pickedDate != null) {
+                            //           String formattedDate =
+                            //               DateFormat('yyyy-MM-dd')
+                            //                   .format(pickedDate);
+                            //           setState(() {
+                            //             tanggalTicket.text = formattedDate;
+                            //           });
+                            //         }
+                            //       },
+                            //       icon:
+                            //           const Icon(Icons.calendar_month_rounded),
+                            //     ),
+                            //     filled: true,
+                            //     fillColor: Colors.white,
+                            //     enabledBorder: OutlineInputBorder(
+                            //       borderSide: const BorderSide(color: slate300),
+                            //       borderRadius: BorderRadius.circular(12),
+                            //     ),
+                            //     border: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.circular(12),
+                            //     ),
+                            //   ),
+                            // ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
