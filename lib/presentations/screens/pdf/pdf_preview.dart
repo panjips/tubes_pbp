@@ -12,7 +12,8 @@ class PreviewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context, rootNavigator: true)
+              .pushReplacementNamed("/detail"),
           icon: const Icon(Icons.arrow_back_outlined),
         ),
         title: Text("Preview"),

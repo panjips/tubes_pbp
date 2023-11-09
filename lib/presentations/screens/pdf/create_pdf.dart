@@ -1,12 +1,60 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_slicing/data/model/destinasi.dart';
+import 'package:test_slicing/data/model/ticket.dart';
+import 'package:test_slicing/data/model/user.dart';
+import 'package:test_slicing/data/repository/auth_repository.dart';
+import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/data/repository/ticket_repository.dart';
 import 'package:test_slicing/presentations/screens/pdf/custom_row.dart';
+import 'package:test_slicing/presentations/screens/pdf/item_doc.dart';
 import 'package:test_slicing/presentations/screens/pdf/pdf_preview.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
 Future<void> createPdf(
   BuildContext context,
 ) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? idPengguna = await prefs.getString('id_user');
+  String? idTicket = await prefs.getString('id_ticket');
+
+  Ticket dataTicket =
+      await TicketRepository().findTicket(idPengguna!, idTicket!);
+
+  User? dataUser;
+  final listUser = await AuthRepository().getAllUser();
+  for (var element in listUser) {
+    if (element.id == idPengguna) {
+      dataUser = element;
+    }
+  }
+
+  Destinasi? dataDestinasi;
+  final listDestinasi = await DestinasiRepositroy().getAllDestinasi();
+  for (var element in listDestinasi!) {
+    if (element.id == dataTicket.idDestinasi) {
+      dataDestinasi = element;
+    }
+  }
+
+  final imageBytes =
+      await fileFromImageUrl(dataUser!.urlPhoto!, dataTicket.idTicket!);
+
+  pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
+    return pw.MemoryImage(imageBytes);
+  }
+
+  print(dataTicket);
+  print(dataUser);
+
   final doc = pw.Document();
   final pdfTheme = pw.PageTheme(
     buildBackground: (context) {
@@ -21,6 +69,14 @@ Future<void> createPdf(
     },
   );
 
+  final List<CustomRow> elements = [
+    CustomRow('Item Name', "Item Price", "Amount", "Total Payment"),
+    CustomRow("Ticket ${dataDestinasi!.nama}", dataDestinasi.hargaTiketMasuk!,
+        dataTicket.jumlahTicket!, dataTicket.totalHarga!),
+  ];
+
+  pw.Widget table = itemColumn(elements);
+
   doc.addPage(
     pw.MultiPage(
       pageTheme: pdfTheme,
@@ -29,23 +85,69 @@ Future<void> createPdf(
       },
       build: (pw.Context context) {
         return [
-          pw.Center(
-            child: pw.Column(
-              mainAxisAlignment: pw.MainAxisAlignment.center,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Container(
-                  margin: pw.EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-                ),
-              ],
-            ),
+          pw.Column(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            children: [
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Padding(
+                    padding: pw.EdgeInsets.only(left: 24),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          "Identitas Diri ",
+                          style: const pw.TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        pw.Container(
+                          margin: const pw.EdgeInsets.only(top: 4),
+                          child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              valueDataDiri(
+                                  "${dataUser!.firstName} ${dataUser.lastName}")
+                            ],
+                          ),
+                        ),
+                        pw.Container(
+                          margin: const pw.EdgeInsets.only(top: 4),
+                          child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [valueDataDiri(dataUser.username)],
+                          ),
+                        ),
+                        pw.Container(
+                          margin: const pw.EdgeInsets.only(top: 4),
+                          child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [valueDataDiri(dataUser.email)],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  imageFormInput(pdfImageProvider, imageBytes),
+                ],
+              ),
+              pw.SizedBox(height: 30),
+              table,
+              pw.SizedBox(height: 60),
+              pw.Text('Scan this qr code to enterance gate'),
+              barcodeKotak(idTicket),
+              pw.Text(idTicket),
+              pw.SizedBox(height: 30),
+              greetingThanks(),
+            ],
           ),
         ];
       },
       footer: (pw.Context context) {
         return pw.Container(
           color: PdfColor.fromHex('#FFDB59'),
-          child: footerPDF("2020-11-02"),
+          child: footerPDF(dataTicket.tanggalTicket!),
         );
       },
     ),
@@ -86,6 +188,68 @@ pw.Center footerPDF(String formattedDate) {
     child: pw.Text(
       'Created At $formattedDate',
       style: pw.TextStyle(fontSize: 10, color: PdfColors.blue),
+    ),
+  );
+}
+
+pw.Padding imageFormInput(
+    pw.ImageProvider Function(Uint8List imageBytes) pdfImageProvider,
+    Uint8List imageBytes) {
+  return pw.Padding(
+    padding: pw.EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    child: pw.FittedBox(
+      child: pw.Image(pdfImageProvider(imageBytes), width: 64),
+      fit: pw.BoxFit.fitHeight,
+      alignment: pw.Alignment.center,
+    ),
+  );
+}
+
+Future<Uint8List> fileFromImageUrl(String imgUrl, String idTicket) async {
+  final response = await http.get(Uri.parse(imgUrl));
+  final documentDirectory = await getApplicationDocumentsDirectory();
+  final file = File(p.join(documentDirectory.path, '$idTicket.jpg'));
+  file.writeAsBytesSync(response.bodyBytes);
+
+  return file.readAsBytesSync();
+}
+
+pw.Padding greetingThanks() {
+  return pw.Padding(
+    padding: const pw.EdgeInsets.all(8.0),
+    child: pw.Column(
+      children: [
+        pw.Text(
+            'Dear Customern, thank you trust our service, we hope u enjoy your holiday.'),
+        pw.SizedBox(height: 30),
+        pw.Text('King regards'),
+        pw.SizedBox(height: 30),
+        pw.Text('Jogja Vacation'),
+      ],
+    ),
+  );
+}
+
+pw.Padding barcodeKotak(String id) {
+  return pw.Padding(
+    padding: pw.EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    child: pw.Center(
+      child: pw.BarcodeWidget(
+        barcode:
+            pw.Barcode.qrCode(errorCorrectLevel: BarcodeQRCorrectionLevel.high),
+        data: id,
+        width: 128,
+        height: 128,
+      ),
+    ),
+  );
+}
+
+pw.Text valueDataDiri(String text) {
+  return pw.Text(
+    text,
+    style: const pw.TextStyle(
+      fontSize: 12,
     ),
   );
 }

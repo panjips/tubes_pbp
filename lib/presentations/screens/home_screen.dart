@@ -4,6 +4,7 @@ import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/data/repository/ticket_repository.dart';
 import 'package:test_slicing/presentations/widgets/card_destination.dart';
 import 'package:test_slicing/presentations/widgets/full_screen_image.dart';
 import 'package:test_slicing/presentations/widgets/maps.dart';
@@ -227,9 +228,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               // ElevatedButton(
               //   onPressed: () async {
-              //     dummyDestinasi.forEach((element) async {
-              //       await DestinasiRepositroy().addDestinasi(element);
-              //     });
+              //     SharedPreferences prefs =
+              //         await SharedPreferences.getInstance();
+              //     String? idUser = await prefs.getString('id_user');
+              //     TicketRepository().findTicket(
+              //         idUser!, '6897b610-09a9-1d8e-a7b7-db8997f491f3');
               //   },
               //   child: Container(
               //     height: 12,
