@@ -23,7 +23,8 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
   TextEditingController jumlahTicket = TextEditingController();
   TextEditingController totalHargaTicket = TextEditingController();
 
- final EasyInfiniteDateTimelineController _controller = EasyInfiniteDateTimelineController();
+  final EasyInfiniteDateTimelineController _controller =
+      EasyInfiniteDateTimelineController();
   DateTime _focusedDate = DateTime.now();
 
   final _formKey = GlobalKey<FormState>();
@@ -144,8 +145,8 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                             ),
                             // EasyInfiniteDateTimeLine(
                             //   controller: _controller,
-                            //   firstDate: DateTime.now(), 
-                            //   focusDate: _focusedDate, 
+                            //   firstDate: DateTime.now(),
+                            //   focusDate: _focusedDate,
                             //   lastDate: DateTime(2025),
                             //   onDateChange: (selectedDate) {
                             //     setState(() {
@@ -177,12 +178,14 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                               initialDate: DateTime.now(),
                               onDateChange: (selectedDate) {
                                 setState(() {
-                                tanggalTicket.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+                                  tanggalTicket.text = DateFormat('yyyy-MM-dd')
+                                      .format(selectedDate);
                                 });
                               },
                               activeColor: Colors.blue,
                               headerProps: const EasyHeaderProps(
-                                selectedDateFormat: SelectedDateFormat.fullDateDMonthAsStrY,
+                                selectedDateFormat:
+                                    SelectedDateFormat.fullDateDMonthAsStrY,
                                 monthPickerType: MonthPickerType.switcher,
                               ),
                               dayProps: const EasyDayProps(
@@ -447,25 +450,6 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                       Container(
                         child: ElevatedButton(
                           onPressed: () async {
-                            showDialog(
-                              context: context, 
-                              builder: (BuildContext ctx) {
-                                return AlertDialog(
-                                  title: const Text("Preview"),
-                                  content: const Text("Ingin Cetak Tiket ?"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text("No")       
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context) => )), 
-                                      child: const Text("Yes")  
-                                    )
-                                  ],
-                                );
-                              }
-                            );
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             String? idUser = await prefs.getString('id_user');
