@@ -447,6 +447,25 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                       Container(
                         child: ElevatedButton(
                           onPressed: () async {
+                            showDialog(
+                              context: context, 
+                              builder: (BuildContext ctx) {
+                                return AlertDialog(
+                                  title: const Text("Preview"),
+                                  content: const Text("Ingin Cetak Tiket ?"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text("No")       
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context) => )), 
+                                      child: const Text("Yes")  
+                                    )
+                                  ],
+                                );
+                              }
+                            );
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             String? idUser = await prefs.getString('id_user');
