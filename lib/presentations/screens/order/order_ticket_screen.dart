@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/ticket.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/presentations/screens/pdf/create_pdf.dart';
+import 'package:test_slicing/presentations/screens/pdf/pdf_preview.dart';
 import 'package:test_slicing/utils/constant.dart';
 import 'package:test_slicing/utils/data_dummy.dart';
 import 'package:test_slicing/data/repository/ticket_repository.dart';
@@ -23,7 +25,8 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
   TextEditingController jumlahTicket = TextEditingController();
   TextEditingController totalHargaTicket = TextEditingController();
 
- final EasyInfiniteDateTimelineController _controller = EasyInfiniteDateTimelineController();
+  final EasyInfiniteDateTimelineController _controller =
+      EasyInfiniteDateTimelineController();
   DateTime _focusedDate = DateTime.now();
 
   final _formKey = GlobalKey<FormState>();
@@ -142,47 +145,18 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                             SizedBox(
                               height: 12,
                             ),
-                            // EasyInfiniteDateTimeLine(
-                            //   controller: _controller,
-                            //   firstDate: DateTime.now(), 
-                            //   focusDate: _focusedDate, 
-                            //   lastDate: DateTime(2025),
-                            //   onDateChange: (selectedDate) {
-                            //     setState(() {
-                            //       _focusedDate = selectedDate;
-                            //       tanggalTicket.text = DateFormat('yyyy-MM-dd').format(selectedDate);
-                            //     });
-                            //   },
-                            //   activeColor: Colors.blue,
-                            //   dayProps: const EasyDayProps(
-                            //     borderColor: Colors.blue,
-                            //     height: 56.0,
-                            //     width: 56.0,
-                            //     dayStructure: DayStructure.dayStrDayNumMonth,
-                            //     inactiveDayStyle: DayStyle(
-                            //       dayNumStyle: TextStyle(
-                            //         fontSize: 18.0,
-                            //       ),
-                            //     ),
-                            //     activeDayStyle: DayStyle(
-                            //       dayNumStyle: TextStyle(
-                            //         fontSize: 18.0,
-                            //         fontWeight: FontWeight.bold,
-                            //         color: Colors.white
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
                             EasyDateTimeLine(
                               initialDate: DateTime.now(),
                               onDateChange: (selectedDate) {
                                 setState(() {
-                                tanggalTicket.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+                                  tanggalTicket.text = DateFormat('yyyy-MM-dd')
+                                      .format(selectedDate);
                                 });
                               },
                               activeColor: Colors.blue,
                               headerProps: const EasyHeaderProps(
-                                selectedDateFormat: SelectedDateFormat.fullDateDMonthAsStrY,
+                                selectedDateFormat:
+                                    SelectedDateFormat.fullDateDMonthAsStrY,
                                 monthPickerType: MonthPickerType.switcher,
                               ),
                               dayProps: const EasyDayProps(
@@ -203,78 +177,6 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                                 ),
                               ),
                             ),
-                            // TextFormField(
-                            //   validator: (value) {
-                            //     if (value == null || value.isEmpty) {
-                            //       return 'Tanggal Lahir Tidak Boleh Kosong';
-                            //     }
-                            //     try {
-                            //       DateTime selectedDate = DateTime.parse(value);
-                            //       int year = selectedDate.year;
-                            //       if (year < 1970 || year > 2023) {
-                            //         return 'Tahun lahir harus antara 1970 dan 2023';
-                            //       }
-                            //     } catch (error) {
-                            //       return 'Format tanggal tidak valid';
-                            //     }
-                            //     return null;
-                            //   },
-                            //   autovalidateMode:
-                            //       AutovalidateMode.onUserInteraction,
-                            //   textAlignVertical: TextAlignVertical.center,
-                            //   controller: tanggalTicket,
-                            //   style: const TextStyle(
-                            //     fontFamily: "Poppins",
-                            //     fontSize: 14,
-                            //     color: slate900,
-                            //   ),
-                            //   decoration: InputDecoration(
-                            //     contentPadding:
-                            //         const EdgeInsets.symmetric(horizontal: 12),
-                            //     hintText: "Tanggal Pesanan",
-                            //     hintStyle: const TextStyle(
-                            //       fontFamily: "Poppins",
-                            //       fontSize: 14,
-                            //       color: slate400,
-                            //     ),
-                            //     errorStyle: const TextStyle(
-                            //       fontFamily: "Poppins",
-                            //       fontWeight: FontWeight.w600,
-                            //       fontSize: 10,
-                            //       color: Colors.red,
-                            //     ),
-                            //     suffixIcon: IconButton(
-                            //       onPressed: () async {
-                            //         DateTime? pickedDate = await showDatePicker(
-                            //           context: context,
-                            //           initialDate: DateTime.now(),
-                            //           firstDate: DateTime(
-                            //               1900), // Set an appropriate minimum date
-                            //           lastDate: DateTime.now(),
-                            //         );
-                            //         if (pickedDate != null) {
-                            //           String formattedDate =
-                            //               DateFormat('yyyy-MM-dd')
-                            //                   .format(pickedDate);
-                            //           setState(() {
-                            //             tanggalTicket.text = formattedDate;
-                            //           });
-                            //         }
-                            //       },
-                            //       icon:
-                            //           const Icon(Icons.calendar_month_rounded),
-                            //     ),
-                            //     filled: true,
-                            //     fillColor: Colors.white,
-                            //     enabledBorder: OutlineInputBorder(
-                            //       borderSide: const BorderSide(color: slate300),
-                            //       borderRadius: BorderRadius.circular(12),
-                            //     ),
-                            //     border: OutlineInputBorder(
-                            //       borderRadius: BorderRadius.circular(12),
-                            //     ),
-                            //   ),
-                            // ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -446,35 +348,38 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                       ),
                       Container(
                         child: ElevatedButton(
-                          onPressed: ()  {
-                            showDialog(context: context, 
-                            builder: (BuildContext context) 
-                            {
-                              AlertDialog(
-                              title: const Text("Preview"),
-                              content: const Text("Ingin Cetak Tiket ?"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text("No")       
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OrderTicketScreen())), 
-                                  child: const Text("Yes")  
-                                )
-                              ],
-                            );
-                          });
-                            // SharedPreferences prefs =
-                            //     await SharedPreferences.getInstance();
-                            // String? idUser = await prefs.getString('id_user');
-                            // await TicketRepository().orderTicket(
-                            //     Ticket(
-                            //         idDestinasi: showDestinasi!.id,
-                            //         jumlahTicket: jumlahTicket.text,
-                            //         tanggalTicket: tanggalTicket.text,
-                            //         totalHarga: totalHargaTicket.text),
-                            //     idUser!);
+                          onPressed: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String? idUser = await prefs.getString('id_user');
+                            await TicketRepository().orderTicket(
+                                Ticket(
+                                    idDestinasi: showDestinasi!.id,
+                                    jumlahTicket: jumlahTicket.text,
+                                    tanggalTicket: tanggalTicket.text,
+                                    totalHarga: totalHargaTicket.text),
+                                idUser!);
+                            // ignore: use_build_context_synchronously
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext ctx) {
+                                  return AlertDialog(
+                                    title: const Text("Preview"),
+                                    content: const Text("Ingin Cetak Tiket ?"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                          onPressed: () => Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pushReplacementNamed('/home'),
+                                          child: const Text("No")),
+                                      TextButton(
+                                          onPressed: () {
+                                            createPdf(context);
+                                          },
+                                          child: const Text("Yes"))
+                                    ],
+                                  );
+                                });
                           },
                           style: ButtonStyle(
                             visualDensity:

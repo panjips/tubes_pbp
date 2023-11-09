@@ -49,6 +49,8 @@ dependencies:
   persistent_bottom_nav_bar: ^5.0.2
   shimmer: ^3.0.0
   uuid: ^4.2.1
+  pdf: ^3.10.6
+  printing: ^5.11.1
 
 dev_dependencies:
   flutter_test:
