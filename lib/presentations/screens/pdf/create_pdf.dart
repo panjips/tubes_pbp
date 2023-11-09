@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:test_slicing/presentations/screens/pdf/custom_row.dart';
+import 'package:test_slicing/presentations/screens/pdf/pdf_preview.dart';
 
-Future<void> createPdf() async {
+Future<void> createPdf(
+  BuildContext context,
+) async {
   final doc = pw.Document();
   final pdfTheme = pw.PageTheme(
     buildBackground: (context) {
@@ -45,6 +48,13 @@ Future<void> createPdf() async {
           child: footerPDF("2020-11-02"),
         );
       },
+    ),
+  );
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => PreviewScreen(doc: doc),
     ),
   );
 }
