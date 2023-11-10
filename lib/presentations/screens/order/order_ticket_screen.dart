@@ -28,10 +28,6 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
   TextEditingController jumlahTicket = TextEditingController();
   TextEditingController totalHargaTicket = TextEditingController();
 
-  final EasyInfiniteDateTimelineController _controller =
-      EasyInfiniteDateTimelineController();
-  DateTime _focusedDate = DateTime.now();
-
   final _formKey = GlobalKey<FormState>();
 
   void refresh() async {
@@ -54,6 +50,7 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
     super.initState();
     refresh();
     jumlahTicket.text = '0';
+    tanggalTicket.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 
   @override
