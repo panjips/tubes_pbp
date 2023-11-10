@@ -34,7 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       allDestinasi = dataDestinasi;
       data = userData;
-      print(dataDestinasi?.map((e) => e.toString()));
+      print(data!.email);
+      // print(dataDestinasi?.map((e) => e.toString()));
     });
   }
 
@@ -77,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         "${data!.firstName} ${data!.lastName}",
                         style: const TextStyle(
+                          overflow: TextOverflow.clip,
                           fontFamily: 'Poppins',
                           fontSize: 28,
                           fontWeight: FontWeight.bold,

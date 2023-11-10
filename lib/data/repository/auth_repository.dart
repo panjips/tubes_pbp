@@ -11,6 +11,7 @@ class AuthRepository {
     final docUser = dbFirebase.collection('users').doc();
 
     user.id = docUser.id;
+    user.urlPhoto = defaultPhotoProfile;
     await docUser.set(user.toJson());
   }
 
@@ -86,4 +87,7 @@ class AuthRepository {
         .then((value) => print('Success'))
         .onError((error, stackTrace) => print("error : $error"));
   }
+
+  String defaultPhotoProfile =
+      "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.";
 }
