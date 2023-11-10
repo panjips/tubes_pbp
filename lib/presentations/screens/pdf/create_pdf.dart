@@ -37,6 +37,8 @@ Future<void> createPdf(
                 pw.Container(
                   margin: pw.EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                 ),
+                
+                barcodeGaris('12345')
               ],
             ),
           ),
@@ -87,5 +89,19 @@ pw.Center footerPDF(String formattedDate) {
       'Created At $formattedDate',
       style: pw.TextStyle(fontSize: 10, color: PdfColors.blue),
     ),
+  );
+}
+
+pw.Padding barcodeGaris(String id){
+  return pw.Padding(
+    padding: const pw.EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+    child: pw.Center(
+      child: pw.BarcodeWidget(
+        data: id,
+        width: 200,
+        height: 50,
+        barcode: pw.Barcode.code128(escapes: true),
+      ),
+    )
   );
 }
