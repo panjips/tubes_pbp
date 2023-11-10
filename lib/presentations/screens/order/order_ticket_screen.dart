@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
@@ -7,10 +8,12 @@ import 'package:test_slicing/data/model/ticket.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
 import 'package:test_slicing/presentations/screens/pdf/create_pdf.dart';
 import 'package:test_slicing/presentations/screens/pdf/pdf_preview.dart';
+import 'package:test_slicing/presentations/widgets/snackbar.dart';
 import 'package:test_slicing/utils/constant.dart';
 import 'package:test_slicing/utils/data_dummy.dart';
 import 'package:test_slicing/data/repository/ticket_repository.dart';
 import 'package:test_slicing/easy_date_timeline.dart';
+import 'package:uuid/uuid.dart';
 
 class OrderTicketScreen extends StatefulWidget {
   const OrderTicketScreen({super.key});
@@ -113,10 +116,13 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                             ),
                           ),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(left: 12),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Expanded(
                           child: Text(
                             showDestinasi!.nama!,
+                            overflow: TextOverflow.visible,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 24,
@@ -349,37 +355,53 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                       Container(
                         child: ElevatedButton(
                           onPressed: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            String? idUser = await prefs.getString('id_user');
-                            await TicketRepository().orderTicket(
-                                Ticket(
-                                    idDestinasi: showDestinasi!.id,
-                                    jumlahTicket: jumlahTicket.text,
-                                    tanggalTicket: tanggalTicket.text,
-                                    totalHarga: totalHargaTicket.text),
-                                idUser!);
-                            // ignore: use_build_context_synchronously
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext ctx) {
-                                  return AlertDialog(
-                                    title: const Text("Preview"),
-                                    content: const Text("Ingin Cetak Tiket ?"),
-                                    actions: <Widget>[
-                                      TextButton(
-                                          onPressed: () => Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pushReplacementNamed('/home'),
-                                          child: const Text("No")),
-                                      TextButton(
+                            if (jumlahTicket.text == '0') {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  showSnackBar(
+                                      "Wrong!",
+                                      "Minimal jumlah pembelian ticket adalah 1",
+                                      ContentType.failure));
+                            } else {
+                              final uuid = Uuid().v1();
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              String? idUser = await prefs.getString('id_user');
+                              await TicketRepository().orderTicket(
+                                  Ticket(
+                                      idTicket: uuid,
+                                      idDestinasi: showDestinasi!.id,
+                                      jumlahTicket: jumlahTicket.text,
+                                      tanggalTicket: tanggalTicket.text,
+                                      totalHarga: totalHargaTicket.text),
+                                  idUser!);
+                              // ignore: use_build_context_synchronously
+                              saveIdTicket(uuid);
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext ctx) {
+                                    return AlertDialog(
+                                      title:
+                                          const Text("Order ticket berhasil!"),
+                                      content:
+                                          const Text("Ingin cetak tiket ?"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pushReplacementNamed('/nav');
+                                            },
+                                            child: const Text("No")),
+                                        TextButton(
                                           onPressed: () {
                                             createPdf(context);
                                           },
-                                          child: const Text("Yes"))
-                                    ],
-                                  );
-                                });
+                                          child: const Text("Yes"),
+                                        )
+                                      ],
+                                    );
+                                  });
+                            }
                           },
                           style: ButtonStyle(
                             visualDensity:
@@ -416,5 +438,14 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
         ),
       ),
     );
+  }
+
+  saveIdTicket(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    print(id);
+    await prefs
+        .setString('id_ticket', id)
+        .then((value) => print("Success set id ticket"))
+        .onError((error, stackTrace) => print("Error : $error"));
   }
 }
