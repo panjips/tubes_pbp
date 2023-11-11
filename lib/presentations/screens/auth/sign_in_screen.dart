@@ -198,10 +198,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
   saveId(String id) async {
     final prefs = await SharedPreferences.getInstance();
-    print(id);
     await prefs
         .setString('id_user', id)
-        .then((value) => print("Success set id user"))
+        .then((value) => print("Success set id user $id"))
         .onError((error, stackTrace) => print("Error : $error"));
   }
 }

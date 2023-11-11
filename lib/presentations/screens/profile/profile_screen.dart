@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 // import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/user.dart';
@@ -103,12 +104,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: InkWell(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          FullImage(url: data!.urlPhoto!),
-                                    )),
+                                onTap: () =>
+                                    PersistentNavBarNavigator.pushNewScreen(
+                                        context,
+                                        screen: FullImage(url: data!.urlPhoto!),
+                                        withNavBar: false),
                                 child: Image.network(
                                   data!.urlPhoto!,
                                   width: 56,

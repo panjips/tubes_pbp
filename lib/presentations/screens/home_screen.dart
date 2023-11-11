@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       allDestinasi = dataDestinasi;
       data = userData;
-      print(data!.email);
+      print("Data user : ${data!.email}");
       // print(dataDestinasi?.map((e) => e.toString()));
     });
   }
@@ -97,12 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(16),
                           child: InkWell(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      FullImage(url: data!.urlPhoto!),
-                                )),
+                            onTap: () =>
+                                PersistentNavBarNavigator.pushNewScreen(context,
+                                    screen: FullImage(url: data!.urlPhoto!),
+                                    withNavBar: false),
                             child: Image.network(
                               data!.urlPhoto!,
                               width: 56,
@@ -251,10 +250,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   saveIdDestinasi(String id) async {
     final prefs = await SharedPreferences.getInstance();
-    print(id);
     await prefs
         .setString('id_destinasi', id)
-        .then((value) => print("Success set id destinasi"))
+        .then((value) => print("Success set id destinasi $id"))
         .onError((error, stackTrace) => print("Error : $error"));
   }
 }

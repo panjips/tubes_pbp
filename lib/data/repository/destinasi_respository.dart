@@ -19,6 +19,20 @@ class DestinasiRepositroy {
     }
   }
 
+  Future<Destinasi?> getDestinasi(String id) async {
+    try {
+      final snapshot = await dbFirebase
+          .collection("destinasi")
+          .where("id", isEqualTo: id)
+          .get();
+      final data = snapshot.docs.map((e) => Destinasi.fromFirestore(e)).single;
+      return data;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   Future<List<Destinasi>?>? getAllDestinasi() async {
     try {
       final snapshot = await dbFirebase.collection('destinasi').get();

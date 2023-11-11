@@ -67,8 +67,8 @@ class _NavigationState extends State<Navigation> {
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.book),
-        title: ("Pemesanan"),
+        icon: Icon(CupertinoIcons.tickets),
+        title: ("Ticket"),
         activeColorPrimary: CupertinoColors.activeBlue,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
