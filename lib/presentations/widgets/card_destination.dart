@@ -44,6 +44,7 @@ class CardDestination extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: slate900,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Row(

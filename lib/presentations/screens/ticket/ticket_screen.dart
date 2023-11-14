@@ -16,7 +16,6 @@ class TicketScreen extends StatefulWidget {
 
 class _TicketScreenState extends State<TicketScreen> {
   List<Ticket>? allTicket;
-  List<Destinasi>? allDestinasi;
   List<Destinasi> destinasiByTicket = [];
 
   Future<void> getTicket() async {
@@ -24,21 +23,22 @@ class _TicketScreenState extends State<TicketScreen> {
     String? idUser = await prefs.getString('id_user');
     User? userData = await AuthRepository().getUserDetail(idUser!);
     setState(() {
-      allTicket = userData?.tickets;
+      allTicket = userData!.tickets;
       print("First Ticket : ${allTicket!.last.idDestinasi}");
       getDestinasi();
     });
   }
 
   void getDestinasi() async {
+    List<Destinasi> all = [];
     for (var element in allTicket!) {
       Destinasi? destinasi =
           await DestinasiRepositroy().getDestinasi(element.idDestinasi!);
-      setState(() {
-        print(destinasi?.id);
-        destinasiByTicket.add(destinasi!);
-      });
+      all.add(destinasi!);
     }
+    setState(() {
+      destinasiByTicket = all;
+    });
   }
 
   @override
@@ -51,9 +51,50 @@ class _TicketScreenState extends State<TicketScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    if (destinasiByTicket.isEmpty) {
+    if (allTicket == null || destinasiByTicket.isEmpty) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image(image: AssetImage("images/empty-ticket.png")),
+            SizedBox(
+              child: Text(
+                "Yah, kamu belum memiliki ticket.",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.normal,
+                  color: slate700,
+                ),
+                overflow: TextOverflow.clip,
+              ),
+            ),
+            SizedBox(
+              child: Text(
+                "Tenang, banyak destinasi wisata yang menarik,",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.normal,
+                  color: slate400,
+                ),
+                overflow: TextOverflow.clip,
+              ),
+            ),
+            SizedBox(
+              child: Text(
+                "explore sekarang yuk!",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.normal,
+                  color: slate400,
+                ),
+                overflow: TextOverflow.clip,
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -72,136 +113,161 @@ class _TicketScreenState extends State<TicketScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(right: 24, left: 24, top: 4),
-        child: Column(
+      body: Padding(
+        padding: const EdgeInsets.only(right: 24, left: 24, top: 12),
+        child: ListView.separated(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return TicketContainer(
+                  size: size,
+                  destinasi: destinasiByTicket[index],
+                  ticket: allTicket![index]);
+            },
+            separatorBuilder: (context, index) => const SizedBox(
+                  height: 12,
+                ),
+            itemCount: allTicket!.length),
+      ),
+    );
+  }
+}
+
+class TicketContainer extends StatelessWidget {
+  const TicketContainer({
+    super.key,
+    required this.size,
+    required this.destinasi,
+    required this.ticket,
+  });
+  final Size size;
+  final Destinasi destinasi;
+  final Ticket ticket;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size.width,
+      height: size.height * (1 / 7),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: slate300),
+        boxShadow: shadowMd,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
           children: [
-            Container(
-              width: size.width,
-              height: size.height * (1 / 7),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: slate300),
-                boxShadow: shadowMd,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image(
+                width: size.width * (1 / 4),
+                image: NetworkImage(destinasi.image!.isEmpty
+                    ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
+                    : destinasi.image!.first),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image(
-                        width: size.width * (1 / 4),
-                        image: NetworkImage(destinasiByTicket.isEmpty
-                            ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                            : destinasiByTicket.first.image!.first),
-                      ),
+            ),
+            SizedBox(
+              width: 8,
+            ),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    destinasi.nama!,
+                    style: const TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: slate900,
                     ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Flexible(
-                      child: Column(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            destinasiByTicket.first.nama!,
-                            style: const TextStyle(
+                            "Tanggal Ticket",
+                            style: TextStyle(
                               fontFamily: "Poppins",
-                              fontSize: 14,
+                              fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: slate900,
+                              color: slate500,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Tanggal Ticket",
-                                    style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: slate500,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    "Jumlah Ticket",
-                                    style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: slate500,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "  : ${allTicket!.first.tanggalTicket!}",
-                                    style: const TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: slate500,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    "  : ${allTicket!.first.jumlahTicket!}",
-                                    style: const TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: slate500,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                constraints: BoxConstraints(),
-                                padding: EdgeInsets.only(top: 2),
-                                alignment: Alignment.topLeft,
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.info_outline_rounded,
-                                  color: green600,
-                                ),
-                              ),
-                              IconButton(
-                                constraints: BoxConstraints(),
-                                padding: EdgeInsets.only(top: 2, left: 8),
-                                alignment: Alignment.topLeft,
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.print,
-                                  color: blue500,
-                                ),
-                              )
-                            ],
+                          Text(
+                            "Jumlah Ticket",
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: slate500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
-                    )
-                  ],
-                ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "  : ${ticket.tanggalTicket!}",
+                            style: const TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: slate500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            "  : ${ticket.jumlahTicket!}",
+                            style: const TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: slate500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        constraints: BoxConstraints(),
+                        padding: EdgeInsets.only(top: 2),
+                        alignment: Alignment.topLeft,
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.info_outline_rounded,
+                          color: green600,
+                        ),
+                      ),
+                      IconButton(
+                        constraints: BoxConstraints(),
+                        padding: EdgeInsets.only(top: 2, left: 8),
+                        alignment: Alignment.topLeft,
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.print,
+                          color: blue500,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
               ),
-            ),
+            )
           ],
         ),
       ),

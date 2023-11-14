@@ -6,6 +6,7 @@ import 'package:test_slicing/presentations/screens/auth/sign_in_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:test_slicing/presentations/screens/auth/sign_up_screen.dart';
 import 'package:test_slicing/presentations/screens/detail/detail_destinasi_screen.dart';
+import 'package:test_slicing/presentations/screens/explore/search_destination.dart';
 import 'package:test_slicing/presentations/screens/home_screen.dart';
 import 'package:test_slicing/presentations/screens/navigation.dart';
 import 'package:test_slicing/presentations/screens/order/order_ticket_screen.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         Routes.editProfileScreen: (context) => const EditProfileScreen(),
         Routes.detailDestinasiScreen: (context) => const DetailScreen(),
         Routes.orderTicketScreen: (context) => const OrderTicketScreen(),
+        Routes.searchDestination: (context) => const SearchScreen(),
       },
     );
   }

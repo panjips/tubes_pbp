@@ -46,7 +46,7 @@ class _NavigationState extends State<Navigation> {
       confineInSafeArea: true,
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
-      stateManagement: true,
+      stateManagement: false,
       hideNavigationBarWhenKeyboardShows: true,
       popAllScreensOnTapOfSelectedTab: true,
     );

@@ -10,4 +10,5 @@ class Routes {
   static const String ticketScreen = "/ticket";
   static const String detailDestinasiScreen = "/detail";
   static const String orderTicketScreen = "/order";
+  static const String searchDestination = "search";
 }

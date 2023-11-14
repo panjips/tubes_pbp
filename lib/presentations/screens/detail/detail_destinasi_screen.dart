@@ -65,8 +65,7 @@ class _DetailScreenState extends State<DetailScreen> {
             size: 32,
             color: slate900,
           ),
-          onPressed: () => Navigator.of(context, rootNavigator: true)
-              .pushReplacementNamed("/nav"),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
         ),
         backgroundColor: slate50,
         elevation: 0.0,
