@@ -12,6 +12,7 @@ const slate700 = Color(0xFF334155);
 const slate900 = Color(0xFF0F172A);
 const blue500 = Color(0xFF3B82F6);
 const blue600 = Color(0xFF2563EB);
+const goldStar = Color(0xFFEEDD3F);
 
 List<BoxShadow> shadowMd = [
   BoxShadow(

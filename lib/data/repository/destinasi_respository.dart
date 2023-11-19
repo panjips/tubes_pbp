@@ -49,13 +49,51 @@ class DestinasiRepositroy {
     }
   }
 
-  Future<void> addUlasan(
-      String idDestinasi, String idPengguna, Ulasan ulasan) async {
+  Future<void> addUlasan(String idDestinasi, Ulasan ulasan) async {
     await dbFirebase
         .collection("destinasi")
         .doc(idDestinasi)
-        .set(ulasan.toJson())
-        .then((value) => print("Success"))
+        .update({
+          'ulasan': FieldValue.arrayUnion([ulasan.toJson()]),
+        })
+        .then((value) => print("Success Tambah"))
         .onError((error, stackTrace) => print("error: $error"));
+  }
+
+  Future<void> deleteUlasan(String idDestinasi, Ulasan ulasan) async {
+    await dbFirebase
+        .collection("destinasi")
+        .doc(idDestinasi)
+        .update({
+          'ulasan': FieldValue.arrayRemove([
+            {
+              'idPengguna': ulasan.idPengguna,
+              'rating': ulasan.rating,
+              'ulasan': ulasan.ulasan,
+            }
+          ]),
+        })
+        .then((value) => print("Success Delete"))
+        .onError((error, stackTrace) => print("error: $error"));
+  }
+
+  Future<void> editUlasan(
+      String idDestinasi, Ulasan newUlasan, Ulasan oldUlasan) async {
+    await deleteUlasan(idDestinasi, oldUlasan);
+    await addUlasan(idDestinasi, newUlasan);
+    //   await dbFirebase
+    //       .collection("destinasi")
+    //       .doc(idDestinasi)
+    //       .update({
+    //         'ulasan': FieldValue.arrayUnion([
+    //           {
+    //             'idPengguna': ulasan.idPengguna,
+    //             'rating': ulasan.rating,
+    //             'ulasan': ulasan.ulasan,
+    //           }
+    //         ]),
+    //       })
+    //       .then((value) => print("Success"))
+    //       .onError((error, stackTrace) => print("error: $error"));
   }
 }

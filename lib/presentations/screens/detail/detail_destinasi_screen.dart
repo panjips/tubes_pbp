@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
-import 'package:test_slicing/data/model/ticket.dart';
+import 'package:test_slicing/data/model/user.dart';
+import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
-import 'package:test_slicing/data/repository/ticket_repository.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -29,7 +29,6 @@ class _DetailScreenState extends State<DetailScreen> {
           showDestinasi = element;
         }
       }
-      print(showDestinasi!.id);
     });
   }
 
@@ -65,7 +64,8 @@ class _DetailScreenState extends State<DetailScreen> {
             size: 32,
             color: slate900,
           ),
-          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          onPressed: () => Navigator.of(context, rootNavigator: true)
+              .pushReplacementNamed('/nav'),
         ),
         backgroundColor: slate50,
         elevation: 0.0,
@@ -73,7 +73,7 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 96),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -82,7 +82,9 @@ class _DetailScreenState extends State<DetailScreen> {
                 child: Image(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    "https://source.unsplash.com/random/1280x720/?yogyakarta",
+                    showDestinasi!.image!.isEmpty
+                        ? "https://source.unsplash.com/random/1280x720/?yogyakarta"
+                        : showDestinasi!.image!.first,
                   ),
                 ),
               ),
@@ -250,7 +252,10 @@ class _DetailScreenState extends State<DetailScreen> {
                           fontWeight: FontWeight.bold),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context, rootNavigator: true)
+                            .pushNamed('/ulasan');
+                      },
                       child: const Text(
                         "See more",
                         style: TextStyle(
@@ -262,7 +267,24 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                   ],
                 ),
-              )
+              ),
+              if (!showDestinasi!.ulasan!.isEmpty)
+                SizedBox(
+                  height: size.height * (1 / 6),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => UlasanCard(
+                      size: size,
+                      ulasan: showDestinasi!.ulasan![index],
+                    ),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 12,
+                    ),
+                    itemCount: showDestinasi!.ulasan!.length >= 3 ? 3 : 1,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                )
+              // UlasanCard(size: size)
             ],
           ),
         ),
@@ -329,6 +351,144 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class UlasanCard extends StatefulWidget {
+  const UlasanCard({
+    super.key,
+    required this.size,
+    required this.ulasan,
+  });
+
+  final Size size;
+  final Ulasan ulasan;
+
+  @override
+  State<UlasanCard> createState() => _UlasanCardState();
+}
+
+class _UlasanCardState extends State<UlasanCard> {
+  User? userReview;
+
+  void refresh() async {
+    User? user =
+        await AuthRepository().getUserDetail(widget.ulasan.idPengguna!);
+    print(user);
+    setState(() {
+      userReview = user;
+    });
+  }
+
+  @override
+  void initState() {
+    refresh();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        color: Colors.white,
+        width: widget.size.width * 0.6,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image(
+                        image: NetworkImage(userReview == null
+                            ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
+                            : userReview!.urlPhoto!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 3),
+                          child: Text(
+                            userReview == null
+                                ? ""
+                                : "${userReview!.firstName} ${userReview!.lastName}",
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: slate900,
+                            ),
+                            overflow: TextOverflow.fade,
+                          ),
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                                top: 3, left: 6, right: 6, bottom: 3),
+                            color: goldStar.withOpacity(0.3),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  color: goldStar,
+                                  size: 16,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    widget.ulasan.rating!,
+                                    style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      color: slate900,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    widget.ulasan.ulasan!,
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      color: slate600,
+                    ),
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

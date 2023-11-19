@@ -25,7 +25,9 @@ class CardDestination extends StatelessWidget {
           height: 100,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('images/banner.png'),
+              image: NetworkImage(linkImage == null
+                  ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
+                  : linkImage!),
               fit: BoxFit.fill,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -55,16 +57,17 @@ class CardDestination extends StatelessWidget {
                   size: 12,
                   color: slate400,
                 ),
-                SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  alamat,
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 10,
-                    fontWeight: FontWeight.normal,
-                    color: slate400,
+                Container(
+                  margin: EdgeInsets.only(left: 2),
+                  child: Text(
+                    alamat,
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 10,
+                      fontWeight: FontWeight.normal,
+                      color: slate400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 )
               ],

@@ -13,7 +13,7 @@ class PreviewScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context, rootNavigator: true)
-              .pushReplacementNamed("/detail"),
+              .pushReplacementNamed("/nav"),
           icon: const Icon(Icons.arrow_back_outlined),
         ),
         title: Text("Preview"),
@@ -24,7 +24,6 @@ class PreviewScreen extends StatelessWidget {
         allowSharing: true,
         allowPrinting: true,
         initialPageFormat: PdfPageFormat.a4,
-        
       ),
     );
   }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/ticket.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/presentations/screens/pdf/create_pdf.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 class TicketScreen extends StatefulWidget {
@@ -17,6 +19,7 @@ class TicketScreen extends StatefulWidget {
 class _TicketScreenState extends State<TicketScreen> {
   List<Ticket>? allTicket;
   List<Destinasi> destinasiByTicket = [];
+  int? availTicketLength;
 
   Future<void> getTicket() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,6 +48,19 @@ class _TicketScreenState extends State<TicketScreen> {
   void initState() {
     super.initState();
     getTicket();
+  }
+
+  int countExpiredTicket() {
+    int sum = 0;
+    final currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    allTicket?.forEach((element) {
+      if (DateTime.parse(currentDate).millisecondsSinceEpoch <=
+          DateTime.parse(element.tanggalTicket!).millisecondsSinceEpoch) {
+        sum++;
+      }
+    });
+
+    return sum;
   }
 
   @override
@@ -116,18 +132,19 @@ class _TicketScreenState extends State<TicketScreen> {
       body: Padding(
         padding: const EdgeInsets.only(right: 24, left: 24, top: 12),
         child: ListView.separated(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return TicketContainer(
-                  size: size,
-                  destinasi: destinasiByTicket[index],
-                  ticket: allTicket![index]);
-            },
-            separatorBuilder: (context, index) => const SizedBox(
-                  height: 12,
-                ),
-            itemCount: allTicket!.length),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return TicketContainer(
+                size: size,
+                destinasi: destinasiByTicket[index],
+                ticket: allTicket![index]);
+          },
+          separatorBuilder: (context, index) => const SizedBox(
+            height: 12,
+          ),
+          itemCount: allTicket!.length,
+        ),
       ),
     );
   }
@@ -240,30 +257,18 @@ class TicketContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        constraints: BoxConstraints(),
-                        padding: EdgeInsets.only(top: 2),
-                        alignment: Alignment.topLeft,
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.info_outline_rounded,
-                          color: green600,
-                        ),
-                      ),
-                      IconButton(
-                        constraints: BoxConstraints(),
-                        padding: EdgeInsets.only(top: 2, left: 8),
-                        alignment: Alignment.topLeft,
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.print,
-                          color: blue500,
-                        ),
-                      )
-                    ],
+                  IconButton(
+                    constraints: BoxConstraints(),
+                    padding: EdgeInsets.only(top: 2),
+                    alignment: Alignment.topLeft,
+                    onPressed: () {
+                      saveIdTicket(ticket.idTicket!);
+                      createPdf(context);
+                    },
+                    icon: Icon(
+                      Icons.print,
+                      color: blue500,
+                    ),
                   ),
                 ],
               ),
@@ -272,5 +277,14 @@ class TicketContainer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  saveIdTicket(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    print(id);
+    await prefs
+        .setString('id_ticket', id)
+        .then((value) => print("Success set id ticket"))
+        .onError((error, stackTrace) => print("Error : $error"));
   }
 }

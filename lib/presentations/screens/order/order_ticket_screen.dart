@@ -6,11 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/ticket.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
-import 'package:test_slicing/presentations/screens/pdf/create_pdf.dart';
-import 'package:test_slicing/presentations/screens/pdf/pdf_preview.dart';
 import 'package:test_slicing/presentations/widgets/snackbar.dart';
 import 'package:test_slicing/utils/constant.dart';
-import 'package:test_slicing/utils/data_dummy.dart';
 import 'package:test_slicing/data/repository/ticket_repository.dart';
 import 'package:test_slicing/easy_date_timeline.dart';
 import 'package:uuid/uuid.dart';
@@ -373,31 +370,8 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                                   idUser!);
                               // ignore: use_build_context_synchronously
                               saveIdTicket(uuid);
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext ctx) {
-                                    return AlertDialog(
-                                      title:
-                                          const Text("Order ticket berhasil!"),
-                                      content:
-                                          const Text("Ingin cetak tiket ?"),
-                                      actions: <Widget>[
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context,
-                                                      rootNavigator: true)
-                                                  .pushReplacementNamed('/nav');
-                                            },
-                                            child: const Text("No")),
-                                        TextButton(
-                                          onPressed: () {
-                                            createPdf(context);
-                                          },
-                                          child: const Text("Yes"),
-                                        )
-                                      ],
-                                    );
-                                  });
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushReplacementNamed('/order_success');
                             }
                           },
                           style: ButtonStyle(

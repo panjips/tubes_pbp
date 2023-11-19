@@ -5,12 +5,11 @@ import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
-import 'package:test_slicing/data/repository/ticket_repository.dart';
+import 'package:test_slicing/presentations/screens/navigation.dart';
 import 'package:test_slicing/presentations/widgets/card_destination.dart';
 import 'package:test_slicing/presentations/widgets/full_screen_image.dart';
 import 'package:test_slicing/presentations/widgets/maps.dart';
 import 'package:test_slicing/utils/constant.dart';
-import 'package:test_slicing/utils/data_dummy.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -146,7 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Align(
                         alignment: Alignment.bottomLeft,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (context) => Navigation(
+                                index: 1,
+                              ),
+                            ));
+                          },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: blue500,
                               shadowColor: slate900,

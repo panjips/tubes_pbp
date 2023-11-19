@@ -87,7 +87,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     onPressed: () {
                       saveSearchKeyword(search.text);
                       Navigator.of(context, rootNavigator: true)
-                          .pushNamed("search");
+                          .pushNamed("/search");
                     },
                     icon: const Icon(Icons.search),
                     color: Colors.grey,
@@ -170,7 +170,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         nama: allDestinasi?[index].nama ?? '',
                         alamat: allDestinasi?[index].alamat ?? '',
                         linkImage: allDestinasi![index].image!.isEmpty
-                            ? ''
+                            ? null
                             : allDestinasi![index].image!.first,
                       ),
                     );

@@ -9,9 +9,12 @@ import 'package:test_slicing/presentations/screens/detail/detail_destinasi_scree
 import 'package:test_slicing/presentations/screens/explore/search_destination.dart';
 import 'package:test_slicing/presentations/screens/home_screen.dart';
 import 'package:test_slicing/presentations/screens/navigation.dart';
+import 'package:test_slicing/presentations/screens/order/order_success.dart';
 import 'package:test_slicing/presentations/screens/order/order_ticket_screen.dart';
 import 'package:test_slicing/presentations/screens/profile/edit_profile_screen.dart';
 import 'package:test_slicing/presentations/screens/profile/profile_screen.dart';
+import 'package:test_slicing/presentations/screens/ulasan/tambah_ulasan_screen.dart';
+import 'package:test_slicing/presentations/screens/ulasan/ulasan_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -42,6 +45,9 @@ class MyApp extends StatelessWidget {
         Routes.detailDestinasiScreen: (context) => const DetailScreen(),
         Routes.orderTicketScreen: (context) => const OrderTicketScreen(),
         Routes.searchDestination: (context) => const SearchScreen(),
+        Routes.ulasanEachDestination: (context) => const UlasanScreen(),
+        Routes.writeUlasan: (context) => const TambahUlasanScreen(),
+        Routes.orderSuccess: (context) => const SuccessOrderScreen(),
       },
     );
   }
