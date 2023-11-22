@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:test_slicing/data/model/ticket.dart';
 
@@ -43,6 +45,7 @@ class User {
             []);
   }
 
+  String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
@@ -53,6 +56,22 @@ class User {
       'lastName': lastName,
       'birthDate': birthDate,
       'jenisKelamin': jenisKelamin,
+      'urlPhoto': urlPhoto,
+      'tickets': tickets?.map((e) => e.toJson()),
+    };
+  }
+
+  String toApiRawJson() => json.encode(toApiJson());
+  Map<String, dynamic> toApiJson() {
+    return <String, dynamic>{
+      'id': id,
+      'email': email,
+      'username': username,
+      'password': password,
+      'first_name': firstName,
+      'last_name': lastName,
+      'tanggal_lahir': birthDate,
+      'jenis_kelamin': jenisKelamin,
       'urlPhoto': urlPhoto,
       'tickets': tickets?.map((e) => e.toJson()),
     };

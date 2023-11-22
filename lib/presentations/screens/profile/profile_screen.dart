@@ -20,7 +20,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
-    User? userData = await AuthRepository().getUserDetail(idUser!);
+    User? userData = await AuthRepository().showProfile(idUser!);
+    // User? userData = await AuthRepository().getUserDetail(idUser!);
     setState(() {
       data = userData;
     });
@@ -95,11 +96,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                       data!.urlPhoto == null
-                          ? Image.network(
-                              "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
-                              width: 56,
-                              height: 56,
-                              fit: BoxFit.cover,
+                          ?
+                          // Image.asset(
+                          //     'images/avatar-icon.png',
+                          //     width: 30,
+                          //     height: 30,
+                          //     fit: BoxFit.cover,
+                          //   )
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.network(
+                                "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
+                                width: 56,
+                                height: 56,
+                                fit: BoxFit.cover,
+                              ),
                             )
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(16),

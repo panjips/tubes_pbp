@@ -80,7 +80,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Column(
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          // await AuthRepository().registerUser(userTesting);
+                          // User userLogin = await AuthRepository()
+                          //     .loginUser("trisna", "123456");
+
+                          // print(userLogin);
+                          await AuthRepository().showProfile("6");
+                        },
                         child: GoogleButton(size, "Sign in"),
                       ),
                       DividerAuth(),
@@ -136,9 +143,13 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                             ),
                             AuthButton(() async {
-                              User? data = await AuthRepository().userLogin(
-                                  username: username.text,
-                                  password: password.text);
+                              User? data = await AuthRepository()
+                                  .loginUser(username.text, password.text);
+
+                              print(data);
+                              // User? data = await AuthRepository().userLogin(
+                              //     username: username.text,
+                              //     password: password.text);
                               if (data != null) {
                                 // ignore: use_build_context_synchronously
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -203,4 +214,13 @@ class _SignInScreenState extends State<SignInScreen> {
         .then((value) => print("Success set id user $id"))
         .onError((error, stackTrace) => print("Error : $error"));
   }
+
+  User userTesting = User(
+      email: "user1@gmail.com",
+      username: "user1",
+      password: "password1",
+      firstName: "John",
+      lastName: "Doe",
+      birthDate: "1990-05-15",
+      jenisKelamin: "Laki-Laki");
 }

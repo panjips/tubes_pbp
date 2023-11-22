@@ -331,8 +331,8 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                 birthDate: birthDate.text,
                 jenisKelamin: jenisKelamin.text);
 
-            await AuthRepository().createUser(user);
-
+            // await AuthRepository().createUser(user);
+            await AuthRepository().registerUser(user);
             ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Success!",
                 "Berhasil registrasi, masuk sekarang!", ContentType.success));
             Navigator.push(

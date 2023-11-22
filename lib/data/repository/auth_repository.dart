@@ -1,11 +1,63 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart';
 import 'package:test_slicing/data/model/user.dart';
 
 class AuthRepository {
+  static final String url = '10.0.2.2:8000';
+  static final String endpoint = '/api/';
+
   final dbFirebase = FirebaseFirestore.instance;
+
+  Future<void> registerUser(User user) async {
+    try {
+      var response = await post(Uri.http(url, "${endpoint}register"),
+          headers: {"Content-Type": "application/json"},
+          body: user.toApiRawJson());
+      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  Future<User> loginUser(String username, String password) async {
+    var response = await post(Uri.http(url, "${endpoint}login"),
+        body: {"username": username, "password": password});
+
+    if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+
+    Map<String, dynamic> dataUser = json.decode(response.body)['data'][0];
+
+    print(dataUser['password']);
+    return User(
+        id: dataUser['id'].toString(),
+        email: dataUser['email'],
+        username: dataUser['username'],
+        password: dataUser['password'],
+        firstName: dataUser['first_name'],
+        lastName: dataUser['last_name'],
+        birthDate: dataUser['tanggal_lahir'],
+        jenisKelamin: dataUser['jenis_kelamin']);
+  }
+
+  Future<User> showProfile(String id) async {
+    var response = await get(Uri.http(url, "${endpoint}user/$id"));
+    if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+    Map<String, dynamic> dataUser = json.decode(response.body)['data'];
+    print(dataUser);
+    return User(
+        id: dataUser['id'].toString(),
+        email: dataUser['email'],
+        username: dataUser['username'],
+        password: dataUser['password'],
+        firstName: dataUser['first_name'],
+        lastName: dataUser['last_name'],
+        birthDate: dataUser['tanggal_lahir'],
+        jenisKelamin: dataUser['jenis_kelamin']);
+  }
 
   Future<void> createUser(User user) async {
     final docUser = dbFirebase.collection('users').doc();
