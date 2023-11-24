@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 // import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -24,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // User? userData = await AuthRepository().getUserDetail(idUser!);
     setState(() {
       data = userData;
+      Future.delayed(Duration(seconds: 5));
     });
   }
 
@@ -96,14 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                       data!.urlPhoto == null
-                          ?
-                          // Image.asset(
-                          //     'images/avatar-icon.png',
-                          //     width: 30,
-                          //     height: 30,
-                          //     fit: BoxFit.cover,
-                          //   )
-                          ClipRRect(
+                          ? ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: Image.network(
                                 "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
@@ -120,8 +116,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         context,
                                         screen: FullImage(url: data!.urlPhoto!),
                                         withNavBar: false),
-                                child: Image.network(
-                                  data!.urlPhoto!,
+                                child: Image.memory(
+                                  base64Decode(data!.urlPhoto!),
                                   width: 56,
                                   height: 56,
                                   fit: BoxFit.cover,

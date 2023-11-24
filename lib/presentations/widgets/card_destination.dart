@@ -1,4 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
@@ -17,6 +20,7 @@ class CardDestination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Uint8List image = base64Decode(linkImage!);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -25,9 +29,12 @@ class CardDestination extends StatelessWidget {
           height: 100,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(linkImage == null
-                  ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
-                  : linkImage!),
+              image: NetworkImage(
+                  "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"),
+              // image: NetworkImage(linkImage == null
+              //     ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
+              //     : 'data:image/jpeg;base64,$linkImage')
+              // image: MemoryImage(image),
               fit: BoxFit.fill,
             ),
             borderRadius: BorderRadius.circular(12),

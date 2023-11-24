@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Destinasi {
@@ -57,6 +60,27 @@ class Destinasi {
     };
   }
 
+  factory Destinasi.fromApi(Map<String, dynamic> data) {
+    return Destinasi(
+      id: data['id'].toString(),
+      nama: data["nama"],
+      kategori: data["kategori"],
+      alamat: data["alamat"],
+      hargaTiketMasuk: data["harga_ticket"],
+      jamOperasional: data["jam_operasional"],
+      deskripsi: data["deskripsi"],
+      image: [
+        // data['image'].toString(),
+      ],
+      // image: (data['image'] as List?)?.cast() ?? [],
+      // ulasan: (data?['ulasan'] as List?)
+      //         ?.map((e) => Ulasan.fromFirestore(e))
+      //         .toList()
+      //         .cast() ??
+      //     [],
+    );
+  }
+
   @override
   String toString() {
     return '\nDestinasi(id: $id, nama: $nama, alamat: $alamat, hargaTiketMasuk: $hargaTiketMasuk, jamOperasional: $jamOperasional, deskripsi: $deskripsi, image: $image, ulasan: ${ulasan?.map((e) => e.toString())})';
@@ -64,11 +88,15 @@ class Destinasi {
 }
 
 class Ulasan {
+  String? id;
+  String? idDestinasi;
   String? idPengguna;
   String? ulasan;
   String? rating;
 
   Ulasan({
+    this.id,
+    this.idDestinasi,
     this.idPengguna,
     this.ulasan,
     this.rating,
@@ -76,21 +104,26 @@ class Ulasan {
 
   factory Ulasan.fromFirestore(Map<String, dynamic>? data) {
     return Ulasan(
-      idPengguna: data?['idPengguna'],
+      id: data?['id'].toString(),
+      idDestinasi: data?['id_destinasi'].toString(),
+      idPengguna: data?['id_user'].toString(),
       ulasan: data?['ulasan'],
       rating: data?['rating'],
     );
   }
 
+  String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() {
-    return {
-      'idPengguna': idPengguna,
+    return <String, dynamic>{
+      'id_destinasi': idDestinasi,
+      'id_user': idPengguna,
       'ulasan': ulasan,
       'rating': rating,
     };
   }
 
   @override
-  String toString() =>
-      '\nUlasan(idPengguna: $idPengguna, ulasan: $ulasan, rating: $rating)';
+  String toString() {
+    return 'Ulasan(id: $id, idDestinasi: $idDestinasi, idPengguna: $idPengguna, ulasan: $ulasan, rating: $rating)';
+  }
 }

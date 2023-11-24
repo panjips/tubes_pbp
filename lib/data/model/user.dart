@@ -61,6 +61,25 @@ class User {
     };
   }
 
+  factory User.fromApi(Map<String, dynamic> data) {
+    return User(
+      id: data['id'].toString(),
+      email: data["email"],
+      username: data["username"],
+      password: data["password"],
+      firstName: data["first_name"],
+      lastName: data["last_name"],
+      birthDate: data["tanggal_lahir"],
+      jenisKelamin: data["jenis_kelamin"],
+      urlPhoto: data["image"],
+      // tickets: (data['tickets'] as List?)
+      //         ?.map((e) => Ticket.fromFirestore(e))
+      //         .toList()
+      //         .cast() ??
+      //     []
+    );
+  }
+
   String toApiRawJson() => json.encode(toApiJson());
   Map<String, dynamic> toApiJson() {
     return <String, dynamic>{
@@ -72,8 +91,8 @@ class User {
       'last_name': lastName,
       'tanggal_lahir': birthDate,
       'jenis_kelamin': jenisKelamin,
-      'urlPhoto': urlPhoto,
-      'tickets': tickets?.map((e) => e.toJson()),
+      // 'urlPhoto': urlPhoto,
+      // 'tickets': tickets?.map((e) => e.toJson()),
     };
   }
 

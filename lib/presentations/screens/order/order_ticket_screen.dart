@@ -31,7 +31,9 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idDestinasi = await prefs.getString('id_destinasi');
     List<Destinasi>? listDestinasi =
-        await DestinasiRepositroy().getAllDestinasi();
+        await DestinasiRepositroy().getAllDestinasiFromApi();
+    // List<Destinasi>? listDestinasi =
+    //     await DestinasiRepositroy().getAllDestinasi();
     setState(() {
       for (var element in listDestinasi!) {
         if (element.id == idDestinasi) {
@@ -360,14 +362,23 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               String? idUser = await prefs.getString('id_user');
-                              await TicketRepository().orderTicket(
-                                  Ticket(
-                                      idTicket: uuid,
-                                      idDestinasi: showDestinasi!.id,
-                                      jumlahTicket: jumlahTicket.text,
-                                      tanggalTicket: tanggalTicket.text,
-                                      totalHarga: totalHargaTicket.text),
-                                  idUser!);
+                              await TicketRepository().orderTicketApi(
+                                Ticket(
+                                    idTicket: uuid,
+                                    idUser: idUser,
+                                    idDestinasi: showDestinasi!.id,
+                                    jumlahTicket: jumlahTicket.text,
+                                    tanggalTicket: tanggalTicket.text,
+                                    totalHarga: totalHargaTicket.text),
+                              );
+                              // await TicketRepository().orderTicket(
+                              //     Ticket(
+                              //         idTicket: uuid,
+                              //         idDestinasi: showDestinasi!.id,
+                              //         jumlahTicket: jumlahTicket.text,
+                              //         tanggalTicket: tanggalTicket.text,
+                              //         totalHarga: totalHargaTicket.text),
+                              //     idUser!);
                               // ignore: use_build_context_synchronously
                               saveIdTicket(uuid);
                               Navigator.of(context, rootNavigator: true)

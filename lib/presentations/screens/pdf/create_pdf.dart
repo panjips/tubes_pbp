@@ -26,31 +26,31 @@ Future<void> createPdf(
   String? idPengguna = await prefs.getString('id_user');
   String? idTicket = await prefs.getString('id_ticket');
 
-  Ticket dataTicket =
-      await TicketRepository().findTicket(idPengguna!, idTicket!);
+  Ticket dataTicket = await TicketRepository().findTicketApi(idTicket!);
 
-  User? dataUser;
-  final listUser = await AuthRepository().getAllUser();
-  for (var element in listUser) {
-    if (element.id == idPengguna) {
-      dataUser = element;
-    }
-  }
+  User? dataUser = await AuthRepository().showProfile(idPengguna!);
+  // final listUser = await AuthRepository().getAllUser();
+  // for (var element in listUser) {
+  //   if (element.id == idPengguna) {
+  //     dataUser = element;
+  //   }
+  // }
 
-  Destinasi? dataDestinasi;
-  final listDestinasi = await DestinasiRepositroy().getAllDestinasi();
-  for (var element in listDestinasi!) {
-    if (element.id == dataTicket.idDestinasi) {
-      dataDestinasi = element;
-    }
-  }
+  Destinasi? dataDestinasi =
+      await DestinasiRepositroy().getDestinasiFromApi(dataTicket.idDestinasi!);
+  // final listDestinasi = await DestinasiRepositroy().getAllDestinasi();
+  // for (var element in listDestinasi!) {
+  //   if (element.id == dataTicket.idDestinasi) {
+  //     dataDestinasi = element;
+  //   }
+  // }
 
-  final imageBytes =
-      await fileFromImageUrl(dataUser!.urlPhoto!, dataTicket.idTicket!);
+  // final imageBytes =
+  //     await fileFromImageUrl(dataUser!.urlPhoto!, dataTicket.idTicket!);
 
-  pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
-    return pw.MemoryImage(imageBytes);
-  }
+  // pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
+  //   return pw.MemoryImage(imageBytes);
+  // }
 
   print(dataTicket);
   print(dataUser);
@@ -129,7 +129,7 @@ Future<void> createPdf(
                       ],
                     ),
                   ),
-                  imageFormInput(pdfImageProvider, imageBytes),
+                  // imageFormInput(pdfImageProvider, imageBytes),
                 ],
               ),
               pw.SizedBox(height: 30),

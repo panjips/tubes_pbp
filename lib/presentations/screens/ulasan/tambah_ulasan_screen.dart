@@ -3,6 +3,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/data/repository/ulasan_repository.dart';
 import 'package:test_slicing/utils/constant.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -139,15 +140,19 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
           onPressed: () async {
             print(currentUser);
             Ulasan addUlasan = Ulasan(
+                idDestinasi: currentDestinasi,
                 idPengguna: currentUser,
                 rating: rating.toString(),
                 ulasan: review.text);
             print(addUlasan);
             if (widget.editData == null) {
-              DestinasiRepositroy().addUlasan(currentDestinasi!, addUlasan);
+              // DestinasiRepositroy().addUlasan(currentDestinasi!, addUlasan);
+              await UlasanRepository().tambahUlasan(addUlasan);
             } else {
-              await DestinasiRepositroy()
-                  .editUlasan(currentDestinasi!, addUlasan, widget.editData!);
+              // await DestinasiRepositroy()
+              //     .editUlasan(currentDestinasi!, addUlasan, widget.editData!);
+              await UlasanRepository()
+                  .editUlasan(addUlasan, widget.editData!.id!);
             }
             // ignore: use_build_context_synchronously
             Navigator.of(context, rootNavigator: true)

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -6,6 +8,7 @@ import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/data/repository/ulasan_repository.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -17,13 +20,22 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   Destinasi? showDestinasi;
+  List<Ulasan>? listUlasan;
+  String? fotoProfile;
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idDestinasi = await prefs.getString('id_destinasi');
+    String? profile = prefs.getString('base64profile');
     List<Destinasi>? listDestinasi =
-        await DestinasiRepositroy().getAllDestinasi();
+        await DestinasiRepositroy().getAllDestinasiFromApi();
+    // List<Destinasi>? listDestinasi =
+    //     await DestinasiRepositroy().getAllDestinasi();
+    List<Ulasan>? ulasan = await UlasanRepository().getUlasan(idDestinasi!);
+    // print(ulasan);
     setState(() {
+      fotoProfile = profile;
+      listUlasan = ulasan;
       for (var element in listDestinasi!) {
         if (element.id == idDestinasi) {
           showDestinasi = element;
@@ -42,7 +54,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    if (showDestinasi == null) {
+    if (showDestinasi == null || listUlasan == null) {
       return const Center(
         child: CircularProgressIndicator(),
       );
@@ -86,6 +98,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         ? "https://source.unsplash.com/random/1280x720/?yogyakarta"
                         : showDestinasi!.image!.first,
                   ),
+                  // image: MemoryImage(base64Decode(showDestinasi!.image!.first)),
                 ),
               ),
               Padding(
@@ -268,19 +281,19 @@ class _DetailScreenState extends State<DetailScreen> {
                   ],
                 ),
               ),
-              if (!showDestinasi!.ulasan!.isEmpty)
+              if (listUlasan!.isNotEmpty)
                 SizedBox(
                   height: size.height * (1 / 6),
                   child: ListView.separated(
                     shrinkWrap: true,
                     itemBuilder: (context, index) => UlasanCard(
                       size: size,
-                      ulasan: showDestinasi!.ulasan![index],
+                      ulasan: listUlasan![index],
                     ),
                     separatorBuilder: (context, index) => const SizedBox(
                       width: 12,
                     ),
-                    itemCount: showDestinasi!.ulasan!.length >= 3 ? 3 : 1,
+                    itemCount: listUlasan!.length >= 3 ? 3 : 1,
                     scrollDirection: Axis.horizontal,
                   ),
                 )
@@ -375,8 +388,7 @@ class _UlasanCardState extends State<UlasanCard> {
   User? userReview;
 
   void refresh() async {
-    User? user =
-        await AuthRepository().getUserDetail(widget.ulasan.idPengguna!);
+    User? user = await AuthRepository().showProfile(widget.ulasan.idPengguna!);
     print(user);
     setState(() {
       userReview = user;
@@ -410,9 +422,11 @@ class _UlasanCardState extends State<UlasanCard> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image(
-                        image: NetworkImage(userReview == null
-                            ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                            : userReview!.urlPhoto!),
+                        // image: NetworkImage(userReview == null
+                        //     ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
+                        //     : userReview!.urlPhoto!),
+                        image: NetworkImage(
+                            'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'),
                         fit: BoxFit.cover,
                       ),
                     ),
