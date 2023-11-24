@@ -42,7 +42,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void getUserLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
-    User? userData = await AuthRepository().getUserDetail(idUser!);
+    // User? userData = await AuthRepository().getUserDetail(idUser!);
+    User? userData = await AuthRepository().showProfile(idUser!);
     setState(() {
       userLogin = userData;
       setValueInput();
@@ -401,8 +402,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 birthDate: birthDate.text,
                 jenisKelamin: jenisKelamin.text);
 
-            await AuthRepository().editDataUser(user, userLogin!.id!);
-
+            // await AuthRepository().editDataUser(user, userLogin!.id!);
+            
+            await AuthRepository().editProfileUser(user, userLogin!.id!);
+            
             ScaffoldMessenger.of(context).showSnackBar(showSnackBar(
                 "Success!", "Berhasil edit profile!", ContentType.success));
 
