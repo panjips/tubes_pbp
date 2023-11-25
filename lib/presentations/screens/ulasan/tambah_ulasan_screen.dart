@@ -143,11 +143,20 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
                 rating: rating.toString(),
                 ulasan: review.text);
             print(addUlasan);
-            if (widget.editData == null) {
-              DestinasiRepositroy().addUlasan(currentDestinasi!, addUlasan);
-            } else {
-              await DestinasiRepositroy()
-                  .editUlasan(currentDestinasi!, addUlasan, widget.editData!);
+            try {
+              if (widget.editData == null) {
+                await DestinasiRepositroy().addUlasan(currentDestinasi!, addUlasan);
+              } else {
+                await DestinasiRepositroy().editUlasan(currentDestinasi!, addUlasan, widget.editData!);
+              }
+              
+              // ignore: use_build_context_synchronously
+              Navigator.of(context, rootNavigator: true)
+                  .pushReplacementNamed('/ulasan');
+            } catch (e) {
+              // Handle any errors here
+              print("Error: $e");
+              // Optionally show an error message to the user
             }
             // ignore: use_build_context_synchronously
             Navigator.of(context, rootNavigator: true)

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Destinasi {
@@ -42,7 +44,7 @@ class Destinasi {
           [],
     );
   }
-
+String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -57,6 +59,20 @@ class Destinasi {
     };
   }
 
+  String toApiRawJson() => json.encode(toApiJson());
+  Map<String, dynamic> toApiJson() {
+    return {
+      'id': id,
+      'kategori': kategori,
+      'nama': nama,
+      'alamat': alamat,
+      'harga_tiket_masuk': hargaTiketMasuk,
+      'jam_operasional': jamOperasional,
+      'deskripsi': deskripsi,
+      'image': image?.map((e) => e),
+      'ulasan': ulasan?.map((e) => e.toJson()),
+    };
+  }
   @override
   String toString() {
     return '\nDestinasi(id: $id, nama: $nama, alamat: $alamat, hargaTiketMasuk: $hargaTiketMasuk, jamOperasional: $jamOperasional, deskripsi: $deskripsi, image: $image, ulasan: ${ulasan?.map((e) => e.toString())})';
@@ -82,7 +98,17 @@ class Ulasan {
     );
   }
 
+String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() {
+    return {
+      'idPengguna': idPengguna,
+      'ulasan': ulasan,
+      'rating': rating,
+    };
+  }
+
+  String toApiRawJson() => json.encode(toApiJson());
+  Map<String, dynamic> toApiJson() {
     return {
       'idPengguna': idPengguna,
       'ulasan': ulasan,
