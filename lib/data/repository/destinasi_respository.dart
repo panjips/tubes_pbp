@@ -12,9 +12,9 @@ class DestinasiRepositroy {
 
   Future<List<Destinasi>> getAllDestinasiFromApi() async {
     var response = await get(Uri.http(url, endpoint));
+    print(json.decode(response.body)['data']);
     if (response.statusCode != 200) throw Exception(response.reasonPhrase);
     final tempAllDestinasi = json.decode(response.body)['data'];
-    // print(json.decode(response.body)['data'][0]["image"]);
     List<Destinasi> destinasi = [];
     for (var element in tempAllDestinasi) {
       destinasi.add(Destinasi.fromApi(element));
