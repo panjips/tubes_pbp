@@ -40,7 +40,7 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
   String? dropdownValue;
 
   void refresh() async {
-    final dataUsers = await AuthRepository().getAllUser();
+    final dataUsers = await AuthRepository().getAllUserFromApi();
     setState(() {
       allUser = dataUsers;
     });
@@ -104,7 +104,7 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                       if (!value.contains('@')) {
                         return 'Email harus menggunakan @';
                       }
-                      if (isUniqueEmail(allUser!, value)) {
+                      if (isUniqueEmail(allUser ?? [], value)) {
                         return 'Email telah digunakan!';
                       }
                       return null;
@@ -114,7 +114,7 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Username tidak boleh kosong!';
                       }
-                      if (isUniqueUsername(allUser!, value)) {
+                      if (isUniqueUsername(allUser ?? [], value)) {
                         return 'Username telah digunakan!';
                       }
                       return null;

@@ -5,6 +5,7 @@ import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/data/repository/ulasan_repository.dart';
 import 'package:test_slicing/presentations/screens/ulasan/tambah_ulasan_screen.dart';
 import 'package:test_slicing/utils/constant.dart';
 
@@ -25,15 +26,16 @@ class _UlasanScreenState extends State<UlasanScreen> {
     String? idUser = await prefs.getString('id_user');
     Destinasi? destinasi =
         await DestinasiRepositroy().getDestinasi(idDestinasi!);
-    List<Ulasan>? listUlasan = destinasi?.ulasan;
+    // List<Ulasan>? listUlasan = destinasi?.ulasan;
+    List<Ulasan>? listUlasan = await UlasanRepository().getUlasan(idDestinasi);
 
     bool find =
-        listUlasan?.any((element) => element.idPengguna == idUser) ?? false;
+        listUlasan.any((element) => element.idPengguna == idUser) ?? false;
 
-    print(listUlasan);
+    // print(listUlasan);
     setState(() {
       isWriteReview = find;
-      ulasan = listUlasan!;
+      ulasan = listUlasan;
     });
   }
 
@@ -203,9 +205,11 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
     String? idDestinasi = await prefs.getString('id_destinasi');
-    User? user =
-        await AuthRepository().getUserDetail(widget.ulasan.idPengguna!);
-    print(user);
+    // User? user =
+    //     await AuthRepository().getUserDetail(widget.ulasan.idPengguna!);
+    User? user = await AuthRepository().showProfile(widget.ulasan.idPengguna!);
+
+    // print(user);
     setState(() {
       idLogin = idUser;
       currentDestinasi = idDestinasi;
@@ -245,9 +249,11 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image(
-                          image: NetworkImage(userReview == null
-                              ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                              : userReview!.urlPhoto!),
+                          image: NetworkImage(
+                              'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'),
+                          // image: NetworkImage(userReview == null
+                          //     ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
+                          //     : userReview!.urlPhoto!),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -368,8 +374,10 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                                   textAlign: TextAlign.start,
                                 ),
                                 onPressed: () async {
-                                  await DestinasiRepositroy().deleteUlasan(
-                                      currentDestinasi!, widget.ulasan);
+                                  // await DestinasiRepositroy().deleteUlasan(
+                                  //     currentDestinasi!, widget.ulasan);
+                                  await UlasanRepository()
+                                      .deleteUlasan(widget.ulasan.id!);
                                   Navigator.pushReplacement(
                                     context,
                                     PageRouteBuilder(

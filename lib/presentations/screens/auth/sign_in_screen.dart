@@ -1,8 +1,12 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
+import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/data/repository/ticket_repository.dart';
+import 'package:test_slicing/data/repository/ulasan_repository.dart';
 import 'package:test_slicing/presentations/screens/auth/sign_up_screen.dart';
 import 'package:test_slicing/presentations/widgets/auth_button.dart';
 import 'package:test_slicing/presentations/widgets/divider.dart';
@@ -86,7 +90,15 @@ class _SignInScreenState extends State<SignInScreen> {
                           //     .loginUser("trisna", "123456");
 
                           // print(userLogin);
-                          await AuthRepository().showProfile("6");
+                          // await AuthRepository().showProfile("6");
+
+                          // await AuthRepository().getAllUserFromApi();
+
+                          // await AuthRepository().updateUser(userTesting, '5');
+                          // await DestinasiRepositroy().getAllDestinasiFromApi();
+
+                          // await DestinasiRepositroy().getDestinasiFromApi('1');
+                          // await TicketRepository().showUserTicket('2');
                         },
                         child: GoogleButton(size, "Sign in"),
                       ),
@@ -145,8 +157,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             AuthButton(() async {
                               User? data = await AuthRepository()
                                   .loginUser(username.text, password.text);
-
-                              print(data);
+                              saveBase64Profile(data.urlPhoto!);
+                              // print(data);
                               // User? data = await AuthRepository().userLogin(
                               //     username: username.text,
                               //     password: password.text);
@@ -207,6 +219,14 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  saveBase64Profile(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs
+        .setString('base64profile', id)
+        .then((value) => print("Success set base64profile"))
+        .onError((error, stackTrace) => print("Error : $error"));
+  }
+
   saveId(String id) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs
@@ -222,5 +242,5 @@ class _SignInScreenState extends State<SignInScreen> {
       firstName: "John",
       lastName: "Doe",
       birthDate: "1990-05-15",
-      jenisKelamin: "Laki-Laki");
+      jenisKelamin: "Perempuan");
 }

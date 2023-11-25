@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,20 +24,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   User? data;
-
+  String? fotoProfile;
   List<Destinasi>? allDestinasi;
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
-    User? userData = await AuthRepository().getUserDetail(idUser!);
+    String? profile = prefs.getString('base64profile');
+    // User? userData = await AuthRepository().getUserDetail(idUser!);
+    User? userData = await AuthRepository().showProfile(idUser!);
+
+    // List<Destinasi>? dataDestinasi =
+    //     await DestinasiRepositroy().getAllDestinasi();
     List<Destinasi>? dataDestinasi =
-        await DestinasiRepositroy().getAllDestinasi();
+        await DestinasiRepositroy().getAllDestinasiFromApi();
     setState(() {
       allDestinasi = dataDestinasi;
       data = userData;
-      print("Data user : ${data!.email}");
+      fotoProfile = profile;
+      Future.delayed(Duration(seconds: 5));
+      // print("Data user : ${data!.email}");
       // print(dataDestinasi?.map((e) => e.toString()));
+      // print(userData.urlPhoto);
     });
   }
 
@@ -101,8 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 PersistentNavBarNavigator.pushNewScreen(context,
                                     screen: FullImage(url: data!.urlPhoto!),
                                     withNavBar: false),
-                            child: Image.network(
-                              data!.urlPhoto!,
+                            child: Image.memory(
+                              base64Decode(fotoProfile!),
                               width: 56,
                               height: 56,
                               fit: BoxFit.cover,
@@ -190,36 +200,38 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 150,
-                width: MediaQuery.of(context).size.width,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: 5,
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: 12,
+              if (allDestinasi != null)
+                SizedBox(
+                  height: 150,
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: 5,
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 12,
+                    ),
+                    itemBuilder: (context, index) {
+                      print(allDestinasi![index].image);
+                      return allDestinasi != null
+                          ? GestureDetector(
+                              onTap: () {
+                                saveIdDestinasi(allDestinasi![index].id!);
+                                Navigator.of(context, rootNavigator: true)
+                                    .pushNamed('/detail');
+                              },
+                              child: CardDestination(
+                                nama: allDestinasi?[index].nama ?? '',
+                                alamat: allDestinasi?[index].alamat ?? '',
+                                linkImage: allDestinasi![index].image!.isEmpty
+                                    ? null
+                                    : allDestinasi![index].image!.first,
+                              ),
+                            )
+                          : const SizedBox();
+                    },
                   ),
-                  itemBuilder: (context, index) {
-                    return allDestinasi != null
-                        ? GestureDetector(
-                            onTap: () {
-                              saveIdDestinasi(allDestinasi![index].id!);
-                              Navigator.of(context, rootNavigator: true)
-                                  .pushNamed('/detail');
-                            },
-                            child: CardDestination(
-                              nama: allDestinasi?[index].nama ?? '',
-                              alamat: allDestinasi?[index].alamat ?? '',
-                              linkImage: allDestinasi![index].image!.isEmpty
-                                  ? ''
-                                  : allDestinasi![index].image!.first,
-                            ),
-                          )
-                        : const SizedBox();
-                  },
                 ),
-              ),
               Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 alignment: Alignment.topLeft,

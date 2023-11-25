@@ -6,6 +6,7 @@ import 'package:test_slicing/data/model/ticket.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/data/repository/ticket_repository.dart';
 import 'package:test_slicing/presentations/screens/pdf/create_pdf.dart';
 import 'package:test_slicing/utils/constant.dart';
 
@@ -24,9 +25,11 @@ class _TicketScreenState extends State<TicketScreen> {
   Future<void> getTicket() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
-    User? userData = await AuthRepository().getUserDetail(idUser!);
+    // User? userData = await AuthRepository().getUserDetail(idUser!);
+    List<Ticket>? ticket = await TicketRepository().showUserTicket(idUser!);
     setState(() {
-      allTicket = userData!.tickets;
+      // allTicket = userData!.tickets;
+      allTicket = ticket;
       print("First Ticket : ${allTicket!.last.idDestinasi}");
       getDestinasi();
     });
@@ -36,8 +39,8 @@ class _TicketScreenState extends State<TicketScreen> {
     List<Destinasi> all = [];
     for (var element in allTicket!) {
       Destinasi? destinasi =
-          await DestinasiRepositroy().getDestinasi(element.idDestinasi!);
-      all.add(destinasi!);
+          await DestinasiRepositroy().getDestinasiFromApi(element.idDestinasi!);
+      all.add(destinasi);
     }
     setState(() {
       destinasiByTicket = all;

@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -36,22 +38,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   List<User>? allUser;
   User? userLogin;
+  String? fotoProfile;
 
   bool isPasswordVisible = false;
 
   void getUserLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
-    // User? userData = await AuthRepository().getUserDetail(idUser!);
+    String? profile = prefs.getString('base64profile');
+
     User? userData = await AuthRepository().showProfile(idUser!);
+    // User? userData = await AuthRepository().getUserDetail(idUser!);
     setState(() {
+      fotoProfile = profile;
+
       userLogin = userData;
       setValueInput();
     });
   }
 
   void getAllDataUser() async {
-    final dataUsers = await AuthRepository().getAllUser();
+    // final dataUsers = await AuthRepository().getAllUser();
+    final dataUsers = await AuthRepository().getAllUserFromApi();
     setState(() {
       allUser = dataUsers;
     });
@@ -138,8 +146,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           )
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              userLogin!.urlPhoto!,
+                            child: Image.memory(
+                              base64Decode(fotoProfile!),
                               width: 96,
                               height: 96,
                               fit: BoxFit.cover,
@@ -482,14 +490,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: IconButton(
                               onPressed: () async {
                                 File image = await _pickImageFromCamera();
-                                String newPhoto = await AuthRepository()
-                                    .uploadImage(image, userLogin!.email);
-                                AuthRepository()
-                                    .setPhotoProfile(userLogin!.id!, newPhoto);
+                                Uint8List imageBytes =
+                                    await image.readAsBytes();
+                                String base64 = base64Encode(imageBytes);
+                                print(base64);
+                                // String newPhoto = await AuthRepository()
+                                //     .uploadImage(image, userLogin!.email);
+                                // AuthRepository()
+                                //     .setPhotoProfile(userLogin!.id!, newPhoto);
                                 setState(() {
                                   getUserLogin();
                                 });
-                                print(newPhoto);
+                                // print(newPhoto);
                               },
                               icon: const Icon(Icons.camera_alt),
                               color: slate500,

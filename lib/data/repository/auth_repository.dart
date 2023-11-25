@@ -17,6 +17,7 @@ class AuthRepository {
       var response = await post(Uri.http(url, "${endpoint}register"),
           headers: {"Content-Type": "application/json"},
           body: user.toApiRawJson());
+      print(json.decode(response.body));
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
     } catch (e) {
       return Future.error(e.toString());
@@ -26,12 +27,12 @@ class AuthRepository {
   Future<User> loginUser(String username, String password) async {
     var response = await post(Uri.http(url, "${endpoint}login"),
         body: {"username": username, "password": password});
-
+    print(json.decode(response.body));
     if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
-    Map<String, dynamic> dataUser = json.decode(response.body)['data'][0];
-
-    print(dataUser['password']);
+    Map<String, dynamic> dataUser = json.decode(response.body)['data'];
+    // String image = dataUser['image'].toString().replaceAll("=", '');
+    // print(dataUser['password']);
     return User(
         id: dataUser['id'].toString(),
         email: dataUser['email'],
@@ -40,14 +41,17 @@ class AuthRepository {
         firstName: dataUser['first_name'],
         lastName: dataUser['last_name'],
         birthDate: dataUser['tanggal_lahir'],
-        jenisKelamin: dataUser['jenis_kelamin']);
+        jenisKelamin: dataUser['jenis_kelamin'],
+        urlPhoto: dataUser['image']);
   }
 
   Future<User> showProfile(String id) async {
     var response = await get(Uri.http(url, "${endpoint}user/$id"));
+    // print(json.decode(response.body));
     if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+
     Map<String, dynamic> dataUser = json.decode(response.body)['data'];
-    print(dataUser);
+    // String base64Image = dataUser['image'].toString().replaceAll("=", '');
     return User(
         id: dataUser['id'].toString(),
         email: dataUser['email'],
@@ -56,7 +60,8 @@ class AuthRepository {
         firstName: dataUser['first_name'],
         lastName: dataUser['last_name'],
         birthDate: dataUser['tanggal_lahir'],
-        jenisKelamin: dataUser['jenis_kelamin']);
+        jenisKelamin: dataUser['jenis_kelamin'],
+        urlPhoto: dataUser['image']);
   }
 
   Future<void> editProfileUser(User user, String id) async {
@@ -71,6 +76,28 @@ class AuthRepository {
       return Future.error(e.toString());
     }
   }
+
+  Future<List<User>> getAllUserFromApi() async {
+    var response = await get(Uri.http(url, "${endpoint}user"));
+    if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+    final tempAllUser = (json.decode(response.body)['data']);
+    List<User> user = [];
+    for (var element in tempAllUser) {
+      user.add(User.fromApi(element));
+    }
+    // print(user);
+    return user;
+  }
+
+  Future<void> updateUser(User user, String id) async {
+    var response = await post(Uri.http(url, "${endpoint}user/update/$id"),
+        headers: {"Content-Type": "application/json"},
+        body: user.toApiRawJson());
+    if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+    print(json.decode(response.body)['data']);
+  }
+
+  // Firebase Repository Auth
 
   Future<void> createUser(User user) async {
     final docUser = dbFirebase.collection('users').doc();
