@@ -64,6 +64,19 @@ class AuthRepository {
         urlPhoto: dataUser['image']);
   }
 
+  Future<void> editProfileUser(User user, String id) async {
+    try {
+      var response = await put(Uri.http(url, "${endpoint}user/$id"),
+          headers: {"Content-Type": "application/json"},
+          body: user.toApiRawJson());
+
+      print(response.body);
+      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
   Future<List<User>> getAllUserFromApi() async {
     var response = await get(Uri.http(url, "${endpoint}user"));
     if (response.statusCode != 200) throw Exception(response.reasonPhrase);

@@ -411,8 +411,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 jenisKelamin: jenisKelamin.text);
 
             // await AuthRepository().editDataUser(user, userLogin!.id!);
-            await AuthRepository().updateUser(user, userLogin!.id!);
-
+            
+            await AuthRepository().editProfileUser(user, userLogin!.id!);
+            
             ScaffoldMessenger.of(context).showSnackBar(showSnackBar(
                 "Success!", "Berhasil edit profile!", ContentType.success));
 

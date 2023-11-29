@@ -207,6 +207,7 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       textAlignVertical: TextAlignVertical.center,
                       controller: birthDate,
+                      readOnly: true,
                       style: const TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14,
@@ -256,6 +257,22 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(
+                                  1900), // Set an appropriate minimum date
+                              lastDate: DateTime.now(),
+                            );
+                            if (pickedDate != null) {
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                              setState(() {
+                                birthDate.text = formattedDate;
+                              });
+                            }
+                      },
                     ),
                     labelInput(text: "Jenis Kelamin", bottom: 4.0, top: 4.0),
                     DropdownButtonFormField2(
