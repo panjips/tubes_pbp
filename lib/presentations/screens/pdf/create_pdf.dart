@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -47,7 +48,8 @@ Future<void> createPdf(
 
   // final imageBytes =
   //     await fileFromImageUrl(dataUser!.urlPhoto!, dataTicket.idTicket!);
-
+  // String? imageBytes = prefs.getString('base64profile');
+  // print(imageBytes);
   // pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
   //   return pw.MemoryImage(imageBytes);
   // }
@@ -129,7 +131,7 @@ Future<void> createPdf(
                       ],
                     ),
                   ),
-                  // imageFormInput(pdfImageProvider, imageBytes),
+                  // imageFormInput(pdfImageProvider, base64Decode(imageBytes!)),
                 ],
               ),
               pw.SizedBox(height: 30),

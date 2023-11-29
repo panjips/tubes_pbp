@@ -157,7 +157,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             AuthButton(() async {
                               User? data = await AuthRepository()
                                   .loginUser(username.text, password.text);
-                              saveBase64Profile(data.urlPhoto!);
+                              saveBase64Profile(data.urlPhoto ?? defaultImage);
                               // print(data);
                               // User? data = await AuthRepository().userLogin(
                               //     username: username.text,
