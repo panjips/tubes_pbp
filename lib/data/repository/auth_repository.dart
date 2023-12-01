@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:test_slicing/data/model/user.dart';
+import 'package:http_parser/http_parser.dart';
 
 class AuthRepository {
   static final String url = '10.0.2.2:8000';
@@ -17,7 +19,6 @@ class AuthRepository {
       var response = await post(Uri.http(url, "${endpoint}register"),
           headers: {"Content-Type": "application/json"},
           body: user.toApiRawJson());
-      print(json.decode(response.body));
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
     } catch (e) {
       return Future.error(e.toString());
@@ -25,14 +26,16 @@ class AuthRepository {
   }
 
   Future<User> loginUser(String username, String password) async {
-    var response = await post(Uri.http(url, "${endpoint}login"),
-        body: {"username": username, "password": password});
-    print(json.decode(response.body));
+    var response = await post(Uri.http(url, "${endpoint}login"), headers: {
+      "Connection": "Keep-Alive",
+      "Keep-Alive": "timeout=5, max=1000",
+    }, body: {
+      "username": username,
+      "password": password
+    });
     if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
     Map<String, dynamic> dataUser = json.decode(response.body)['data'];
-    // String image = dataUser['image'].toString().replaceAll("=", '');
-    // print(dataUser['password']);
     return User(
         id: dataUser['id'].toString(),
         email: dataUser['email'],
@@ -46,12 +49,13 @@ class AuthRepository {
   }
 
   Future<User> showProfile(String id) async {
-    var response = await get(Uri.http(url, "${endpoint}user/$id"));
-    // print(json.decode(response.body));
+    var response = await get(Uri.http(url, "${endpoint}user/$id"), headers: {
+      "Connection": "Keep-Alive",
+      "Keep-Alive": "timeout=5, max=1000",
+    });
     if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
     Map<String, dynamic> dataUser = json.decode(response.body)['data'];
-    // String base64Image = dataUser['image'].toString().replaceAll("=", '');
     return User(
         id: dataUser['id'].toString(),
         email: dataUser['email'],
@@ -69,12 +73,37 @@ class AuthRepository {
       var response = await put(Uri.http(url, "${endpoint}user/$id"),
           headers: {"Content-Type": "application/json"},
           body: user.toApiRawJson());
-
-      print(response.body);
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
     } catch (e) {
       return Future.error(e.toString());
     }
+  }
+
+  Future<void> editPhotoProfile(User user, String id, File image) async {
+    try {
+      print(id);
+      var request =
+          MultipartRequest("POST", Uri.http(url, "${endpoint}user/$id"));
+      request.fields['_method'] = "PUT";
+      request.fields['first_name'] = user.firstName;
+      request.fields['last_name'] = user.lastName;
+      request.fields['username'] = user.username;
+      request.fields['password'] = user.password;
+      request.fields['jenis_kelamin'] = user.jenisKelamin;
+      request.fields['tanggal_lahir'] = user.birthDate;
+      request.files.add(
+        await MultipartFile.fromPath(
+          'image',
+          image.path,
+          contentType: MediaType('image', 'jpg'),
+        ),
+      );
+
+      final response = await request.send();
+      final responsed = await Response.fromStream(response);
+
+      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+    } catch (e) {}
   }
 
   Future<List<User>> getAllUserFromApi() async {
@@ -85,60 +114,7 @@ class AuthRepository {
     for (var element in tempAllUser) {
       user.add(User.fromApi(element));
     }
-    // print(user);
     return user;
-  }
-
-  Future<void> updateUser(User user, String id) async {
-    var response = await post(Uri.http(url, "${endpoint}user/update/$id"),
-        headers: {"Content-Type": "application/json"},
-        body: user.toApiRawJson());
-    if (response.statusCode != 200) throw Exception(response.reasonPhrase);
-    print(json.decode(response.body)['data']);
-  }
-
-  // Firebase Repository Auth
-
-  Future<void> createUser(User user) async {
-    final docUser = dbFirebase.collection('users').doc();
-
-    user.id = docUser.id;
-    user.urlPhoto = defaultPhotoProfile;
-    await docUser.set(user.toJson());
-  }
-
-  Future<List<User>> getAllUser() async {
-    final snapshot = await dbFirebase.collection("users").get();
-    final userData = snapshot.docs.map((e) => User.fromFirestore(e)).toList();
-    return userData;
-  }
-
-  Future<User?> userLogin(
-      {required String username, required String password}) async {
-    try {
-      final snapshot = await dbFirebase
-          .collection("users")
-          .where("username", isEqualTo: username)
-          .where("password", isEqualTo: password)
-          .get();
-      final data = snapshot.docs.map((e) => User.fromFirestore(e)).single;
-      return data;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
-  Future<User?> getUserDetail(String id) async {
-    try {
-      final snapshot =
-          await dbFirebase.collection("users").where("id", isEqualTo: id).get();
-      final data = snapshot.docs.map((e) => User.fromFirestore(e)).single;
-      return data;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
   }
 
   Future<String> uploadImage(File imageFile, String email) async {
@@ -158,23 +134,6 @@ class AuthRepository {
         .doc(id)
         .update({
           'urlPhoto': urlPhoto,
-        })
-        .then((value) => print('Success'))
-        .onError((error, stackTrace) => print("error : $error"));
-  }
-
-  Future<void> editDataUser(User newUser, String id) async {
-    await dbFirebase
-        .collection("users")
-        .doc(id)
-        .update({
-          'birthDate': newUser.birthDate,
-          'email': newUser.email,
-          'firstName': newUser.firstName,
-          'lastName': newUser.lastName,
-          'jenisKelamin': newUser.jenisKelamin,
-          'password': newUser.password,
-          'username': newUser.username,
         })
         .then((value) => print('Success'))
         .onError((error, stackTrace) => print("error : $error"));

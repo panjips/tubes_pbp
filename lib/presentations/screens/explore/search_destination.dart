@@ -20,7 +20,7 @@ class _SearchScreenState extends State<SearchScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? searchKeyword = await prefs.getString('id_search');
     List<Destinasi>? dataDestinasi =
-        await DestinasiRepositroy().getAllDestinasi();
+        await DestinasiRepositroy().getAllDestinasiFromApi();
     List<Destinasi>? destinasiSearch = dataDestinasi?.where((element) {
       return element.nama!.contains(searchKeyword!);
     }).toList();
@@ -173,9 +173,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                       .pushNamed('/detail');
                                 },
                                 child: SearchDestination(
-                                    size: size,
-                                    nama: searchDestinasi![index].nama!,
-                                    alamat: searchDestinasi![index].alamat!),
+                                  size: size,
+                                  nama: searchDestinasi![index].nama!,
+                                  alamat: searchDestinasi![index].alamat!,
+                                  linkImage: searchDestinasi![index].image,
+                                ),
                               ),
                           separatorBuilder: (context, index) => const SizedBox(
                                 height: 12,
@@ -232,8 +234,13 @@ class SearchDestination extends StatelessWidget {
             child: Image(
               fit: BoxFit.cover,
               image: NetworkImage(
-                "https://source.unsplash.com/random/1280x720/?yogyakarta",
-              ),
+                  linkImage == null
+                      ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
+                      : linkImage!,
+                  headers: {
+                    "Connection": "Keep-Alive",
+                    "Keep-Alive": "timeout=10, max=10000",
+                  }),
             ),
           ),
         ),

@@ -24,10 +24,10 @@ class _UlasanScreenState extends State<UlasanScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idDestinasi = await prefs.getString('id_destinasi');
     String? idUser = await prefs.getString('id_user');
-    Destinasi? destinasi =
-        await DestinasiRepositroy().getDestinasi(idDestinasi!);
+    // Destinasi? destinasi =
+    //     await DestinasiRepositroy().getDestinasi(idDestinasi!);
     // List<Ulasan>? listUlasan = destinasi?.ulasan;
-    List<Ulasan>? listUlasan = await UlasanRepository().getUlasan(idDestinasi);
+    List<Ulasan>? listUlasan = await UlasanRepository().getUlasan(idDestinasi!);
 
     bool find =
         listUlasan.any((element) => element.idPengguna == idUser) ?? false;
@@ -249,11 +249,9 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image(
-                          image: NetworkImage(
-                              'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'),
-                          // image: NetworkImage(userReview == null
-                          //     ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                          //     : userReview!.urlPhoto!),
+                          image: NetworkImage(userReview == null
+                              ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
+                              : userReview!.urlPhoto!),
                           fit: BoxFit.cover,
                         ),
                       ),

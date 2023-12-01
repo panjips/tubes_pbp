@@ -1,12 +1,8 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
-import 'package:test_slicing/data/repository/destinasi_respository.dart';
-import 'package:test_slicing/data/repository/ticket_repository.dart';
-import 'package:test_slicing/data/repository/ulasan_repository.dart';
 import 'package:test_slicing/presentations/screens/auth/sign_up_screen.dart';
 import 'package:test_slicing/presentations/widgets/auth_button.dart';
 import 'package:test_slicing/presentations/widgets/divider.dart';
@@ -20,10 +16,10 @@ class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SignInScreen> createState() => SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class SignInScreenState extends State<SignInScreen> {
   bool passwordVisible = false;
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -83,26 +79,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: () async {
-                          // await AuthRepository().registerUser(userTesting);
-                          // User userLogin = await AuthRepository()
-                          //     .loginUser("trisna", "123456");
-
-                          // print(userLogin);
-                          // await AuthRepository().showProfile("6");
-
-                          // await AuthRepository().getAllUserFromApi();
-
-                          // await AuthRepository().updateUser(userTesting, '5');
-                          // await DestinasiRepositroy().getAllDestinasiFromApi();
-
-                          // await DestinasiRepositroy().getDestinasiFromApi('1');
-                          // await TicketRepository().showUserTicket('2');
-                        },
-                        child: GoogleButton(size, "Sign in"),
-                      ),
-                      DividerAuth(),
+                      // GestureDetector(
+                      //   onTap: () async {
+                      //   },
+                      //   child: GoogleButton(size, "Sign in"),
+                      // ),
+                      // DividerAuth(),
                       Form(
                         child: Column(
                           children: [
@@ -157,11 +139,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             AuthButton(() async {
                               User? data = await AuthRepository()
                                   .loginUser(username.text, password.text);
-                              saveBase64Profile(data.urlPhoto ?? defaultImage);
-                              // print(data);
-                              // User? data = await AuthRepository().userLogin(
-                              //     username: username.text,
-                              //     password: password.text);
                               if (data != null) {
                                 // ignore: use_build_context_synchronously
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -173,7 +150,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                 // ignore: use_build_context_synchronously
                                 Navigator.pushReplacementNamed(context, '/nav');
                               }
-                            }, size: size, text: "Sign in")
+                            },
+                                size: size,
+                                text: "Sign in",
+                                key: ValueKey("button"))
                           ],
                         ),
                       ),
@@ -217,14 +197,6 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
     );
-  }
-
-  saveBase64Profile(String id) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs
-        .setString('base64profile', id)
-        .then((value) => print("Success set base64profile"))
-        .onError((error, stackTrace) => print("Error : $error"));
   }
 
   saveId(String id) async {

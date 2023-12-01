@@ -30,29 +30,16 @@ Future<void> createPdf(
   Ticket dataTicket = await TicketRepository().findTicketApi(idTicket!);
 
   User? dataUser = await AuthRepository().showProfile(idPengguna!);
-  // final listUser = await AuthRepository().getAllUser();
-  // for (var element in listUser) {
-  //   if (element.id == idPengguna) {
-  //     dataUser = element;
-  //   }
-  // }
 
   Destinasi? dataDestinasi =
       await DestinasiRepositroy().getDestinasiFromApi(dataTicket.idDestinasi!);
-  // final listDestinasi = await DestinasiRepositroy().getAllDestinasi();
-  // for (var element in listDestinasi!) {
-  //   if (element.id == dataTicket.idDestinasi) {
-  //     dataDestinasi = element;
-  //   }
-  // }
 
-  // final imageBytes =
-  //     await fileFromImageUrl(dataUser!.urlPhoto!, dataTicket.idTicket!);
-  // String? imageBytes = prefs.getString('base64profile');
-  // print(imageBytes);
-  // pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
-  //   return pw.MemoryImage(imageBytes);
-  // }
+  final imageBytes =
+      await fileFromImageUrl(dataUser!.urlPhoto!, dataTicket.idTicket!);
+
+  pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
+    return pw.MemoryImage(imageBytes);
+  }
 
   print(dataTicket);
   print(dataUser);
@@ -131,7 +118,7 @@ Future<void> createPdf(
                       ],
                     ),
                   ),
-                  // imageFormInput(pdfImageProvider, base64Decode(imageBytes!)),
+                  imageFormInput(pdfImageProvider, imageBytes),
                 ],
               ),
               pw.SizedBox(height: 30),
@@ -196,11 +183,11 @@ pw.Center footerPDF(String formattedDate) {
 
 pw.Padding imageFormInput(
     pw.ImageProvider Function(Uint8List imageBytes) pdfImageProvider,
-    Uint8List imageBytes) {
+    Uint8List image) {
   return pw.Padding(
     padding: pw.EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     child: pw.FittedBox(
-      child: pw.Image(pdfImageProvider(imageBytes), width: 64),
+      child: pw.Image(pdfImageProvider(image), width: 64),
       fit: pw.BoxFit.fitHeight,
       alignment: pw.Alignment.center,
     ),

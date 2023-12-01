@@ -38,27 +38,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   List<User>? allUser;
   User? userLogin;
-  String? fotoProfile;
 
   bool isPasswordVisible = false;
 
   void getUserLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
-    String? profile = prefs.getString('base64profile');
 
     User? userData = await AuthRepository().showProfile(idUser!);
-    // User? userData = await AuthRepository().getUserDetail(idUser!);
     setState(() {
-      fotoProfile = profile;
-
       userLogin = userData;
       setValueInput();
     });
   }
 
   void getAllDataUser() async {
-    // final dataUsers = await AuthRepository().getAllUser();
     final dataUsers = await AuthRepository().getAllUserFromApi();
     setState(() {
       allUser = dataUsers;
@@ -135,24 +129,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 height: 96,
                 child: Stack(
                   children: [
-                    userLogin!.urlPhoto == null
-                        ? SizedBox(
-                            width: 96,
-                            height: 96,
-                            child: Image.network(
-                              "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.memory(
-                              base64Decode(fotoProfile!),
-                              width: 96,
-                              height: 96,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        userLogin!.urlPhoto != null
+                            ? userLogin!.urlPhoto!
+                            : "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
+                        width: 96,
+                        height: 96,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: IconButton(
@@ -410,16 +397,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 birthDate: birthDate.text,
                 jenisKelamin: jenisKelamin.text);
 
-            // await AuthRepository().editDataUser(user, userLogin!.id!);
-            
             await AuthRepository().editProfileUser(user, userLogin!.id!);
-            
             ScaffoldMessenger.of(context).showSnackBar(showSnackBar(
                 "Success!", "Berhasil edit profile!", ContentType.success));
-
-            // Navigator.of(context).push(MaterialPageRoute(
-            //   builder: (context) => ProfileScreen(),
-            // ));
             PersistentNavBarNavigator.pushNewScreen(
               context,
               screen: Navigation(index: 3),
@@ -490,18 +470,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: IconButton(
                               onPressed: () async {
                                 File image = await _pickImageFromCamera();
-                                Uint8List imageBytes =
-                                    await image.readAsBytes();
-                                String base64 = base64Encode(imageBytes);
-                                print(base64);
-                                // String newPhoto = await AuthRepository()
-                                //     .uploadImage(image, userLogin!.email);
-                                // AuthRepository()
-                                //     .setPhotoProfile(userLogin!.id!, newPhoto);
+                                await AuthRepository().editPhotoProfile(
+                                    userLogin!, userLogin!.id!, image);
                                 setState(() {
                                   getUserLogin();
                                 });
-                                // print(newPhoto);
                               },
                               icon: const Icon(Icons.camera_alt),
                               color: slate500,
@@ -535,14 +508,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: IconButton(
                               onPressed: () async {
                                 File image = await _pickImageFromGallery();
-                                String newPhoto = await AuthRepository()
-                                    .uploadImage(image, userLogin!.email);
-                                AuthRepository()
-                                    .setPhotoProfile(userLogin!.id!, newPhoto);
+                                await AuthRepository().editPhotoProfile(
+                                    userLogin!, userLogin!.id!, image);
                                 setState(() {
                                   getUserLogin();
                                 });
-                                print(newPhoto);
                               },
                               icon: const Icon(
                                   Icons.photo_size_select_actual_rounded),

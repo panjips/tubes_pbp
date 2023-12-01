@@ -8,6 +8,7 @@ TextFormField inputForm(
   obsecureText = false,
 }) {
   return TextFormField(
+    key: ValueKey(hintText),
     validator: (value) => validator(value),
     autovalidateMode: AutovalidateMode.onUserInteraction,
     obscureText: obsecureText,

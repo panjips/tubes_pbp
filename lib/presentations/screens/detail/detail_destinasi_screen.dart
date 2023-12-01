@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -29,10 +27,7 @@ class _DetailScreenState extends State<DetailScreen> {
     String? profile = prefs.getString('base64profile');
     List<Destinasi>? listDestinasi =
         await DestinasiRepositroy().getAllDestinasiFromApi();
-    // List<Destinasi>? listDestinasi =
-    //     await DestinasiRepositroy().getAllDestinasi();
     List<Ulasan>? ulasan = await UlasanRepository().getUlasan(idDestinasi!);
-    // print(ulasan);
     setState(() {
       fotoProfile = profile;
       listUlasan = ulasan;
@@ -94,11 +89,14 @@ class _DetailScreenState extends State<DetailScreen> {
                 child: Image(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    showDestinasi!.image!.isEmpty
-                        ? "https://source.unsplash.com/random/1280x720/?yogyakarta"
-                        : showDestinasi!.image!.first,
-                  ),
-                  // image: MemoryImage(base64Decode(showDestinasi!.image!.first)),
+                      showDestinasi!.image!.isEmpty
+                          ? "https://source.unsplash.com/random/1280x720/?yogyakarta"
+                          : showDestinasi!.image!,
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Connection": "Keep-Alive",
+                        "Keep-Alive": "timeout=10, max=1000",
+                      }),
                 ),
               ),
               Padding(
@@ -145,7 +143,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 child: Text(
                   showDestinasi!.deskripsi!,
                   textAlign: TextAlign.justify,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 14,
                     color: slate700,
@@ -153,7 +151,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Text(
                   "Additional Informations",
@@ -389,7 +387,6 @@ class _UlasanCardState extends State<UlasanCard> {
 
   void refresh() async {
     User? user = await AuthRepository().showProfile(widget.ulasan.idPengguna!);
-    print(user);
     setState(() {
       userReview = user;
     });
@@ -422,11 +419,9 @@ class _UlasanCardState extends State<UlasanCard> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image(
-                        // image: NetworkImage(userReview == null
-                        //     ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                        //     : userReview!.urlPhoto!),
-                        image: NetworkImage(
-                            'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'),
+                        image: NetworkImage(userReview == null
+                            ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
+                            : userReview!.urlPhoto!),
                         fit: BoxFit.cover,
                       ),
                     ),

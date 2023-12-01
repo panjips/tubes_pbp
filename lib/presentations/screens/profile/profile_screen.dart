@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-// import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
@@ -23,7 +20,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
     User? userData = await AuthRepository().showProfile(idUser!);
-    // User? userData = await AuthRepository().getUserDetail(idUser!);
     setState(() {
       data = userData;
       Future.delayed(Duration(seconds: 5));
@@ -98,32 +94,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      data!.urlPhoto == null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Image.network(
-                                "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
-                                width: 56,
-                                height: 56,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: InkWell(
-                                onTap: () =>
-                                    PersistentNavBarNavigator.pushNewScreen(
-                                        context,
-                                        screen: FullImage(url: data!.urlPhoto!),
-                                        withNavBar: false),
-                                child: Image.memory(
-                                  base64Decode(data!.urlPhoto!),
-                                  width: 56,
-                                  height: 56,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: InkWell(
+                          onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: FullImage(url: data!.urlPhoto!),
+                              withNavBar: false),
+                          child: Image.network(
+                            data!.urlPhoto != null
+                                ? data!.urlPhoto!
+                                : "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
+                            width: 56,
+                            height: 56,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 ],

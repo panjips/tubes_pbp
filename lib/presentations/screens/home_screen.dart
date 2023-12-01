@@ -24,28 +24,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   User? data;
-  String? fotoProfile;
   List<Destinasi>? allDestinasi;
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
-    String? profile = prefs.getString('base64profile');
-    // User? userData = await AuthRepository().getUserDetail(idUser!);
     User? userData = await AuthRepository().showProfile(idUser!);
 
-    // List<Destinasi>? dataDestinasi =
-    //     await DestinasiRepositroy().getAllDestinasi();
     List<Destinasi>? dataDestinasi =
         await DestinasiRepositroy().getAllDestinasiFromApi();
     setState(() {
       allDestinasi = dataDestinasi;
       data = userData;
-      fotoProfile = profile;
       Future.delayed(Duration(seconds: 5));
-      // print("Data user : ${data!.email}");
-      // print(dataDestinasi?.map((e) => e.toString()));
-      // print(userData.urlPhoto);
     });
   }
 
@@ -97,28 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  data!.urlPhoto == null
-                      ? Image.network(
-                          "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
-                          width: 56,
-                          height: 56,
-                          fit: BoxFit.cover,
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: InkWell(
-                            onTap: () =>
-                                PersistentNavBarNavigator.pushNewScreen(context,
-                                    screen: FullImage(url: data!.urlPhoto!),
-                                    withNavBar: false),
-                            child: Image.memory(
-                              base64Decode(fotoProfile!),
-                              width: 56,
-                              height: 56,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: InkWell(
+                      onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: FullImage(url: data!.urlPhoto!),
+                          withNavBar: false),
+                      child: Image.network(
+                        data!.urlPhoto != null
+                            ? data!.urlPhoto!
+                            : "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
+                        width: 56,
+                        height: 56,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Container(
@@ -212,7 +198,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 12,
                     ),
                     itemBuilder: (context, index) {
-                      print(allDestinasi![index].image);
                       return allDestinasi != null
                           ? GestureDetector(
                               onTap: () {
@@ -225,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 alamat: allDestinasi?[index].alamat ?? '',
                                 linkImage: allDestinasi![index].image!.isEmpty
                                     ? null
-                                    : allDestinasi![index].image!.first,
+                                    : allDestinasi![index].image!,
                               ),
                             )
                           : const SizedBox();
@@ -245,19 +230,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     SharedPreferences prefs =
-              //         await SharedPreferences.getInstance();
-              //     String? idUser = await prefs.getString('id_user');
-              //     TicketRepository().findTicket(
-              //         idUser!, '6897b610-09a9-1d8e-a7b7-db8997f491f3');
-              //   },
-              //   child: Container(
-              //     height: 12,
-              //     width: 12,
-              //   ),
-              // ),
               Maps(),
             ],
           ),

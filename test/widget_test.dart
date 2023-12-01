@@ -1,30 +1,32 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:test_slicing/main.dart';
+import 'package:test_slicing/presentations/screens/auth/sign_in_screen.dart';
+import 'package:test_slicing/presentations/widgets/auth_button.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Sign in screen renders correctly', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: SignInScreen(),
+    ));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // expect(find.byType(SignInScreen), findsOneWidget);
+    // expect(find.byType(Image), findsOneWidget);
+    // expect(find.byType(Text), findsNWidgets(5));
+    // expect(find.byType(TextFormField), findsNWidgets(2));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // final SignInScreenState signInScreenState =
+    //     tester.state(find.byType(SignInScreen));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Username'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
+    expect(find.text('Sign in'), findsOneWidget);
+
+    await tester.enterText(find.byKey(ValueKey('Username')), 'trisna');
+    await tester.enterText(find.byKey(ValueKey('Password')), '123456');
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    await tester.press(find.text('Sign in'));
+    // await tester.tap(find.text('AuthButton'));
+    // // expect(find.byType(GoogleButton), findsOneWidget);
   });
 }

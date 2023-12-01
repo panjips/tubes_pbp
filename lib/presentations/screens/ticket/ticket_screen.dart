@@ -185,7 +185,7 @@ class TicketContainer extends StatelessWidget {
                 width: size.width * (1 / 4),
                 image: NetworkImage(destinasi.image!.isEmpty
                     ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                    : destinasi.image!.first),
+                    : destinasi.image!),
               ),
             ),
             SizedBox(

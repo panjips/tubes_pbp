@@ -106,8 +106,9 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                             height: 90,
                             width: 120,
                             child: Image(
-                              image: NetworkImage(
-                                  "https://source.unsplash.com/random/1280x720/?yogyakarta"),
+                              image: NetworkImage(showDestinasi!.image! != null
+                                  ? showDestinasi!.image!
+                                  : "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"),
                               fit: BoxFit.cover,
                             ),
                           ),

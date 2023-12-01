@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 Container AuthButton(void Function() onPressed,
-    {required Size size, required text, marginTop = 16.0}) {
+    {required Size size, required text, marginTop = 16.0, key}) {
   return Container(
     margin: EdgeInsets.only(top: marginTop),
     child: ElevatedButton(
+      key: key,
       onPressed: onPressed,
       style: ButtonStyle(
         visualDensity: VisualDensity.adaptivePlatformDensity,

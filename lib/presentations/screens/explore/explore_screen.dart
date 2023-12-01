@@ -20,10 +20,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   void refresh() async {
     List<Destinasi>? dataDestinasi =
-        await DestinasiRepositroy().getAllDestinasi();
+        await DestinasiRepositroy().getAllDestinasiFromApi();
     List<Destinasi>? destinasiByType;
     if (sortType != 'All') {
-      destinasiByType = dataDestinasi?.where((element) {
+      destinasiByType = dataDestinasi.where((element) {
         return element.kategori == sortType;
       }).toList();
     }
@@ -171,7 +171,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         alamat: allDestinasi?[index].alamat ?? '',
                         linkImage: allDestinasi![index].image!.isEmpty
                             ? null
-                            : allDestinasi![index].image!.first,
+                            : allDestinasi![index].image!,
                       ),
                     );
                   },

@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:test_slicing/data/model/ticket.dart';
 
 class User {
@@ -26,41 +24,6 @@ class User {
       this.urlPhoto,
       this.tickets});
 
-  factory User.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    final data = snapshot.data();
-    return User(
-        id: snapshot.id,
-        email: data?["email"],
-        username: data?["username"],
-        password: data?["password"],
-        firstName: data?["firstName"],
-        lastName: data?["lastName"],
-        birthDate: data?["birthDate"],
-        jenisKelamin: data?["jenisKelamin"],
-        urlPhoto: data?["urlPhoto"],
-        tickets: (data?['tickets'] as List?)
-                ?.map((e) => Ticket.fromFirestore(e))
-                .toList()
-                .cast() ??
-            []);
-  }
-
-  String toRawJson() => json.encode(toJson());
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'id': id,
-      'email': email,
-      'username': username,
-      'password': password,
-      'firstName': firstName,
-      'lastName': lastName,
-      'birthDate': birthDate,
-      'jenisKelamin': jenisKelamin,
-      'urlPhoto': urlPhoto,
-      'tickets': tickets?.map((e) => e.toJson()),
-    };
-  }
-
   factory User.fromApi(Map<String, dynamic> data) {
     return User(
       id: data['id'].toString(),
@@ -72,11 +35,6 @@ class User {
       birthDate: data["tanggal_lahir"],
       jenisKelamin: data["jenis_kelamin"],
       urlPhoto: data["image"],
-      // tickets: (data['tickets'] as List?)
-      //         ?.map((e) => Ticket.fromFirestore(e))
-      //         .toList()
-      //         .cast() ??
-      //     []
     );
   }
 
@@ -91,7 +49,7 @@ class User {
       'last_name': lastName,
       'tanggal_lahir': birthDate,
       'jenis_kelamin': jenisKelamin,
-      // 'urlPhoto': urlPhoto,
+      'image': null,
       // 'tickets': tickets?.map((e) => e.toJson()),
     };
   }

@@ -20,7 +20,6 @@ class CardDestination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Uint8List image = base64Decode(linkImage!);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,11 +29,13 @@ class CardDestination extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
-                  "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"),
-              // image: NetworkImage(linkImage == null
-              //     ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
-              //     : 'data:image/jpeg;base64,$linkImage')
-              // image: MemoryImage(image),
+                  linkImage == null
+                      ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
+                      : linkImage!,
+                  headers: {
+                    "Connection": "Keep-Alive",
+                    "Keep-Alive": "timeout=10, max=10000",
+                  }),
               fit: BoxFit.fill,
             ),
             borderRadius: BorderRadius.circular(12),

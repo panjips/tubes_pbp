@@ -18,26 +18,6 @@ class Ticket {
     this.totalHarga,
   });
 
-  factory Ticket.fromFirestore(Map<String, dynamic>? data) {
-    return Ticket(
-      idDestinasi: data?['idDestinasi'],
-      idTicket: data?['idTicket'],
-      tanggalTicket: data?['tanggalTicket'],
-      jumlahTicket: data?['jumlahTicket'],
-      totalHarga: data?['totalHarga'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'idDestinasi': idDestinasi,
-      'idTicket': idTicket,
-      'tanggalTicket': tanggalTicket,
-      'jumlahTicket': jumlahTicket,
-      'totalHarga': totalHarga,
-    };
-  }
-
   factory Ticket.fromApi(Map<String, dynamic>? data) {
     return Ticket(
       idUser: data?['id_user'].toString(),
