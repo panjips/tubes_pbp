@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -86,17 +87,16 @@ class _DetailScreenState extends State<DetailScreen> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                      showDestinasi!.image!.isEmpty
-                          ? "https://source.unsplash.com/random/1280x720/?yogyakarta"
-                          : showDestinasi!.image!,
-                      headers: {
-                        "Content-Type": "application/json",
-                        "Connection": "Keep-Alive",
-                        "Keep-Alive": "timeout=10, max=1000",
-                      }),
+                child: CachedNetworkImage(
+                  imageUrl: showDestinasi!.image == null
+                      ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
+                      : showDestinasi!.image!,
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  httpHeaders: const {
+                    "Connection": "Keep-Alive",
+                    "Keep-Alive": "timeout=10, max=10000",
+                  },
+                  fit: BoxFit.fill,
                 ),
               ),
               Padding(
@@ -218,9 +218,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
-                      CupertinoIcons.time,
+                      CupertinoIcons.money_dollar,
                       color: slate600,
-                      size: 28,
+                      size: 34,
                     ),
                   ),
                   Column(
@@ -418,10 +418,16 @@ class _UlasanCardState extends State<UlasanCard> {
                     height: 56,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image(
-                        image: NetworkImage(userReview == null
+                      child: CachedNetworkImage(
+                        imageUrl: userReview == null
                             ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                            : userReview!.urlPhoto!),
+                            : userReview!.urlPhoto!,
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        httpHeaders: const {
+                          "Connection": "Keep-Alive",
+                          "Keep-Alive": "timeout=10, max=10000",
+                        },
                         fit: BoxFit.cover,
                       ),
                     ),

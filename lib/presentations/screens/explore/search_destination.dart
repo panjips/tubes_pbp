@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -231,16 +232,16 @@ class SearchDestination extends StatelessWidget {
           height: size.height * (1 / 5),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image(
+            child: CachedNetworkImage(
+              imageUrl: linkImage == null
+                  ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
+                  : linkImage!,
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+              httpHeaders: const {
+                "Connection": "Keep-Alive",
+                "Keep-Alive": "timeout=10, max=10000",
+              },
               fit: BoxFit.cover,
-              image: NetworkImage(
-                  linkImage == null
-                      ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
-                      : linkImage!,
-                  headers: {
-                    "Connection": "Keep-Alive",
-                    "Keep-Alive": "timeout=10, max=10000",
-                  }),
             ),
           ),
         ),

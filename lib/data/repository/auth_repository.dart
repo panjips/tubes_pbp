@@ -10,6 +10,7 @@ import 'package:http_parser/http_parser.dart';
 
 class AuthRepository {
   static final String url = '10.0.2.2:8000';
+  // static final String url = 'pbp-pariwisata-api.000webhostapp.com';
   static final String endpoint = '/api/';
 
   final dbFirebase = FirebaseFirestore.instance;

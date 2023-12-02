@@ -2,7 +2,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'package:test_slicing/utils/constant.dart';
@@ -23,22 +25,20 @@ class CardDestination extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 170,
-          height: 100,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                  linkImage == null
-                      ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
-                      : linkImage!,
-                  headers: {
-                    "Connection": "Keep-Alive",
-                    "Keep-Alive": "timeout=10, max=10000",
-                  }),
-              fit: BoxFit.fill,
-            ),
-            borderRadius: BorderRadius.circular(12),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: CachedNetworkImage(
+            imageUrl: linkImage == null
+                ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
+                : linkImage!,
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+            httpHeaders: const {
+              "Connection": "Keep-Alive",
+              "Keep-Alive": "timeout=10, max=10000",
+            },
+            width: 170,
+            height: 100,
+            fit: BoxFit.fill,
           ),
         ),
         Column(

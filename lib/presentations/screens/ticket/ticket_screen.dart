@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
@@ -181,11 +183,17 @@ class TicketContainer extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image(
+              child: CachedNetworkImage(
+                imageUrl: destinasi.image == null
+                    ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
+                    : destinasi.image!,
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                httpHeaders: const {
+                  "Connection": "Keep-Alive",
+                  "Keep-Alive": "timeout=10, max=10000",
+                },
                 width: size.width * (1 / 4),
-                image: NetworkImage(destinasi.image!.isEmpty
-                    ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                    : destinasi.image!),
+                fit: BoxFit.fill,
               ),
             ),
             SizedBox(
@@ -260,18 +268,150 @@ class TicketContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-                  IconButton(
-                    constraints: BoxConstraints(),
-                    padding: EdgeInsets.only(top: 2),
-                    alignment: Alignment.topLeft,
-                    onPressed: () {
-                      saveIdTicket(ticket.idTicket!);
-                      createPdf(context);
-                    },
-                    icon: Icon(
-                      Icons.print,
-                      color: blue500,
-                    ),
+                  Row(
+                    children: [
+                      IconButton(
+                        constraints: BoxConstraints(),
+                        padding: EdgeInsets.only(top: 2),
+                        alignment: Alignment.topLeft,
+                        onPressed: () {
+                          saveIdTicket(ticket.idTicket!);
+                          createPdf(context);
+                        },
+                        icon: Icon(
+                          Icons.print,
+                          color: blue500,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: IconButton(
+                          constraints: BoxConstraints(),
+                          padding: EdgeInsets.only(top: 2),
+                          alignment: Alignment.topLeft,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: const Text(
+                                        "Hapus Ticket",
+                                        style: TextStyle(
+                                          color: slate900,
+                                          fontFamily: "Poppins",
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      content: const Text(
+                                        "Apakah kamu yakin untuk menghapus ticket ini?",
+                                        style: TextStyle(
+                                          color: slate900,
+                                          fontFamily: "Poppins",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            "Tidak",
+                                            style: TextStyle(
+                                              color: slate900,
+                                              fontFamily: "Poppins",
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {},
+                                          child: const Text(
+                                            "Ya",
+                                            style: TextStyle(
+                                              color: blue600,
+                                              fontFamily: "Poppins",
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                          icon: Icon(
+                            Icons.highlight_remove_rounded,
+                            color: const Color.fromARGB(255, 162, 24, 15),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: IconButton(
+                          constraints: BoxConstraints(),
+                          padding: EdgeInsets.only(top: 2),
+                          alignment: Alignment.topLeft,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: const Text(
+                                        "Reschedule",
+                                        style: TextStyle(
+                                          color: slate900,
+                                          fontFamily: "Poppins",
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      content: const Text(
+                                        "Apakah kamu yakin untuk reschedule ticket ini?",
+                                        style: TextStyle(
+                                          color: slate900,
+                                          fontFamily: "Poppins",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            "Tidak",
+                                            style: TextStyle(
+                                              color: slate900,
+                                              fontFamily: "Poppins",
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {},
+                                          child: const Text(
+                                            "Ya",
+                                            style: TextStyle(
+                                              color: blue600,
+                                              fontFamily: "Poppins",
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                          icon: Icon(
+                            Icons.date_range,
+                            color: green600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

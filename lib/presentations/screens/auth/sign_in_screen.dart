@@ -98,6 +98,7 @@ class SignInScreenState extends State<SignInScreen> {
                               width: size.width,
                               height: 48,
                               child: TextFormField(
+                                key: Key("Password"),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "Username atau Email tidak boleh kosong!";
@@ -136,24 +137,68 @@ class SignInScreenState extends State<SignInScreen> {
                                 ),
                               ),
                             ),
-                            AuthButton(() async {
-                              User? data = await AuthRepository()
-                                  .loginUser(username.text, password.text);
-                              if (data != null) {
-                                // ignore: use_build_context_synchronously
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    showSnackBar(
-                                        "Success!",
-                                        "Berhasil masuk, selamat menjelajah",
-                                        ContentType.success));
-                                saveId(data.id!);
-                                // ignore: use_build_context_synchronously
-                                Navigator.pushReplacementNamed(context, '/nav');
-                              }
-                            },
-                                size: size,
-                                text: "Sign in",
-                                key: ValueKey("button"))
+                            Container(
+                              margin: EdgeInsets.only(top: 16.0),
+                              child: ElevatedButton(
+                                key: Key("loginButton"),
+                                onPressed: () async {
+                                  User? data = await AuthRepository()
+                                      .loginUser(username.text, password.text);
+                                  // ignore: use_build_context_synchronously
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      showSnackBar(
+                                          "Success!",
+                                          "Berhasil masuk, selamat menjelajah",
+                                          ContentType.success));
+                                  saveId(data.id!);
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.pushReplacementNamed(
+                                      context, '/nav');
+                                },
+                                style: ButtonStyle(
+                                  visualDensity:
+                                      VisualDensity.adaptivePlatformDensity,
+                                  enableFeedback: false,
+                                  overlayColor:
+                                      MaterialStatePropertyAll(blue600),
+                                  splashFactory: NoSplash.splashFactory,
+                                  backgroundColor:
+                                      MaterialStatePropertyAll(blue500),
+                                  shape: MaterialStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  fixedSize: MaterialStateProperty.all(
+                                    Size(size.width, 48.0),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Sign in",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Poppins",
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // AuthButton(() async {
+                            //   User? data = await AuthRepository()
+                            //       .loginUser(username.text, password.text);
+                            //   // ignore: use_build_context_synchronously
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //       showSnackBar(
+                            //           "Success!",
+                            //           "Berhasil masuk, selamat menjelajah",
+                            //           ContentType.success));
+                            //   saveId(data.id!);
+                            //   // ignore: use_build_context_synchronously
+                            //   Navigator.pushReplacementNamed(context, '/nav');
+                            // },
+                            //     size: size,
+                            //     text: "Sign in",
+                            //     key: Key("loginButton"))
                           ],
                         ),
                       ),

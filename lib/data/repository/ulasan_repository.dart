@@ -5,6 +5,7 @@ import 'package:test_slicing/data/model/destinasi.dart';
 
 class UlasanRepository {
   static final String url = '10.0.2.2:8000';
+  // static final String url = 'pbp-pariwisata-api.000webhostapp.com';
   static final String endpoint = '/api/ulasan/';
 
   Future<List<Ulasan>> getUlasan(String idDestinasi) async {

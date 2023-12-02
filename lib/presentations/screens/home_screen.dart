@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 margin: const EdgeInsets.only(bottom: 8),
                 alignment: Alignment.topLeft,
                 child: const Text(
-                  "Nearby Destination",
+                  "Order Review",
                   style: TextStyle(
                     color: slate900,
                     fontSize: 20,

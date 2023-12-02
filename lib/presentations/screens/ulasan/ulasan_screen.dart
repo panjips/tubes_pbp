@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,15 +25,10 @@ class _UlasanScreenState extends State<UlasanScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idDestinasi = await prefs.getString('id_destinasi');
     String? idUser = await prefs.getString('id_user');
-    // Destinasi? destinasi =
-    //     await DestinasiRepositroy().getDestinasi(idDestinasi!);
-    // List<Ulasan>? listUlasan = destinasi?.ulasan;
     List<Ulasan>? listUlasan = await UlasanRepository().getUlasan(idDestinasi!);
 
     bool find =
         listUlasan.any((element) => element.idPengguna == idUser) ?? false;
-
-    // print(listUlasan);
     setState(() {
       isWriteReview = find;
       ulasan = listUlasan;
@@ -205,8 +201,6 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUser = await prefs.getString('id_user');
     String? idDestinasi = await prefs.getString('id_destinasi');
-    // User? user =
-    //     await AuthRepository().getUserDetail(widget.ulasan.idPengguna!);
     User? user = await AuthRepository().showProfile(widget.ulasan.idPengguna!);
 
     // print(user);
@@ -248,10 +242,16 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                       height: 56,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image(
-                          image: NetworkImage(userReview == null
+                        child: CachedNetworkImage(
+                          imageUrl: userReview == null
                               ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                              : userReview!.urlPhoto!),
+                              : userReview!.urlPhoto!,
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                          httpHeaders: const {
+                            "Connection": "Keep-Alive",
+                            "Keep-Alive": "timeout=10, max=10000",
+                          },
                           fit: BoxFit.cover,
                         ),
                       ),
