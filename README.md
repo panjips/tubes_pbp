@@ -1,6 +1,6 @@
 # Kelompok 10
 
-Unguided Library
+Unguided API
 
 # Kelas : Pemrograman Berbasis Platform C
 # Anggota Kelompok : 
@@ -11,8 +11,8 @@ Unguided Library
 - FIDELIS VENDRIKO GERARDY (210711404)
 
 # Pembagian Tugas :
-- Juneta Julia : Library intl
-- Intan Setyo Ari Dewi : Image Picker
-- I Made Panji Pusaka Suryeswara : Pdf & Printing
-- Simen Ngui : Barcode Widget
-- FIDELIS VENDRIKO GERARDY : Uuid
+- Juneta Julia : User controller api
+- Intan Setyo Ari Dewi : destinasi controller api
+- I Made Panji Pusaka Suryeswara : implemenetasi login,register,tampil, dan CR (Create,Read) di flutter
+- Simen Ngui : Update Data, UD (Update,Delete) di flutter, dan ulasan controller api
+- FIDELIS VENDRIKO GERARDY : ticket controller api
