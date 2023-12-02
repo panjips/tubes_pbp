@@ -11,8 +11,8 @@ Unguided API
 - FIDELIS VENDRIKO GERARDY (210711404)
 
 # Pembagian Tugas :
-- Juneta Julia : User controller api
-- Intan Setyo Ari Dewi : destinasi controller api
-- I Made Panji Pusaka Suryeswara : implemenetasi login,register,tampil, dan CR (Create,Read) di flutter
-- Simen Ngui : Update Data, UD (Update,Delete) di flutter, dan ulasan controller api
+- Juneta Julia : Update Delete widget test
+- Intan Setyo Ari Dewi : Create Read widget test
+- I Made Panji Pusaka Suryeswara : Login  widget test
+- Simen Ngui : Register widget test
 - FIDELIS VENDRIKO GERARDY : ticket controller api
