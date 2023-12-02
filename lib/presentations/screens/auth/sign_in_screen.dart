@@ -110,6 +110,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               (p0) {},
                               controller: username,
                               hintText: "Username",
+                              key: const Key('Username'),
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 8),
@@ -174,7 +175,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 // ignore: use_build_context_synchronously
                                 Navigator.pushReplacementNamed(context, '/nav');
                               }
-                            }, size: size, text: "Sign in")
+                            }, size: size, text: "Sign in", key: const Key('loginButton')),
                           ],
                         ),
                       ),
