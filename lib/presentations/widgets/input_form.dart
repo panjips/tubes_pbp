@@ -6,8 +6,10 @@ TextFormField inputForm(
   required controller,
   required hintText,
   obsecureText = false,
+  Key? key,
 }) {
   return TextFormField(
+    key: key,
     validator: (value) => validator(value),
     autovalidateMode: AutovalidateMode.onUserInteraction,
     obscureText: obsecureText,

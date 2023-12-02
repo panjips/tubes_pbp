@@ -116,6 +116,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               width: size.width,
                               height: 48,
                               child: TextFormField(
+                                key: const Key('Password'),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "Username atau Email tidak boleh kosong!";
