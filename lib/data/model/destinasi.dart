@@ -45,7 +45,7 @@ class Destinasi {
           [],
     );
   }
-
+String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -114,7 +114,7 @@ class Ulasan {
 
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+    return {
       'id_destinasi': idDestinasi,
       'id_user': idPengguna,
       'ulasan': ulasan,
