@@ -1,20 +1,13 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'dart:convert';
-import 'package:http/http.dart';
 
 class DestinasiRepositroy {
   static final String url = '10.0.2.2:8000';
   static final String endpoint = '/api/';
 
   final dbFirebase = FirebaseFirestore.instance;
-
-  static final String url = '10.0.2.2:8000';
-  static final String endpoint = '/api/destinasi';
-
   Future<List<Destinasi>> getAllDestinasiFromApi() async {
     var response = await get(Uri.http(url, endpoint));
     print(json.decode(response.body)['data']);
@@ -101,7 +94,7 @@ class DestinasiRepositroy {
     try {
       var response = await post(Uri.http(url, "${endpoint}ulasan/$idDestinasi"),
           headers: {"Content-Type": "application/json"},
-          body: ulasan.toApiRawJson());
+          body: ulasan.toRawJson());
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
     } catch (e) {
       return Future.error(e.toString());
@@ -123,7 +116,7 @@ class DestinasiRepositroy {
     try {
       var response = await post(Uri.http(url, "${endpoint}ulasan/$idDestinasi"),
           headers: {"Content-Type": "application/json"},
-          body: ulasan.toApiRawJson());
+          body: ulasan.toRawJson());
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
     } catch (e) {
       return Future.error(e.toString());

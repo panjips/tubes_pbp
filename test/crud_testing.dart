@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:test_slicing/data/model/ulasan.dart'; // Menggantinya dengan path yang sesuai
+import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/repository/ulasan_repository.dart';
 
 void main() {
@@ -16,15 +16,15 @@ void main() {
     test('Tambah Ulasan', () async {
       UlasanRepository ulasanRepository = UlasanRepository();
       Ulasan ulasan = Ulasan(
-        id: '1',
-        idPengguna: 'pengguna_test',
+        idPengguna: '1',
         ulasan: 'Ini adalah ulasan pengguna untuk destinasi ini.',
+        idDestinasi: '1',
       );
 
       await ulasanRepository.tambahUlasan(ulasan);
 
-      List<Ulasan> ulasanList = await ulasanRepository.getUlasan(ulasan.idDestinasi);
-      Ulasan addedUlasan = ulasanList.firstWhere((element) => element.id == ulasan.id, orElse: () => null);
+      List<Ulasan> ulasanList = await ulasanRepository.getUlasan(ulasan.idDestinasi!);
+      Ulasan addedUlasan = ulasanList.firstWhere((element) => element.id == ulasan.id);
 
       expect(addedUlasan, isNotNull);
       expect(addedUlasan.idPengguna, ulasan.idPengguna);
