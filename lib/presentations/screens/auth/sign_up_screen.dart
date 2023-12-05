@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:test_slicing/presentations/screens/auth/registrasi_screen.dart';
 import 'package:test_slicing/presentations/screens/auth/sign_in_screen.dart';
 import 'package:test_slicing/presentations/widgets/auth_button.dart';
-import 'package:test_slicing/presentations/widgets/divider.dart';
-import 'package:test_slicing/presentations/widgets/google_container.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -51,14 +49,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 padding: const EdgeInsets.only(left: 36, right: 36, bottom: 12),
                 child: Column(
                   children: [
-                    GoogleButton(size, "Sign up With Gmail"),
-                    DividerAuth(),
                     AuthButton(
                       () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RegistrasiScreen(),
+                              builder: (context) => const RegistrasiScreen(),
                             ));
                       },
                       size: size,
@@ -83,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SignInScreen(),
+                                builder: (context) => const SignInScreen(),
                               )),
                           child: const Text(
                             " Sign in",

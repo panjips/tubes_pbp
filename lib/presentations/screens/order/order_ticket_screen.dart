@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
@@ -29,18 +32,15 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idDestinasi = await prefs.getString('id_destinasi');
+    String? idDestinasi = prefs.getString('id_destinasi');
     List<Destinasi>? listDestinasi =
         await DestinasiRepositroy().getAllDestinasiFromApi();
-    // List<Destinasi>? listDestinasi =
-    //     await DestinasiRepositroy().getAllDestinasi();
     setState(() {
-      for (var element in listDestinasi!) {
+      for (var element in listDestinasi) {
         if (element.id == idDestinasi) {
           showDestinasi = element;
         }
       }
-      print(showDestinasi!.id);
     });
   }
 
@@ -100,27 +100,29 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                   children: [
                     Row(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            height: 90,
-                            width: 120,
-                            child: Image(
-                              image: NetworkImage(showDestinasi!.image! != null
-                                  ? showDestinasi!.image!
-                                  : "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"),
-                              fit: BoxFit.cover,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: SizedBox(
+                              height: 90,
+                              width: 120,
+                              child: Image(
+                                image: CachedNetworkImageProvider(showDestinasi!
+                                            .image !=
+                                        null
+                                    ? showDestinasi!.image!
+                                    : "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 12,
                         ),
                         Expanded(
                           child: Text(
                             showDestinasi!.nama!,
                             overflow: TextOverflow.visible,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 24,
                               color: slate900,
@@ -145,9 +147,6 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: 12,
-                            ),
                             EasyDateTimeLine(
                               initialDate: DateTime.now(),
                               onDateChange: (selectedDate) {
@@ -190,7 +189,7 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "Harga Ticket",
                                         style: TextStyle(
                                             fontFamily: "Poppins",
@@ -200,7 +199,7 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                                       ),
                                       Text(
                                         "Rp. ${showDestinasi!.hargaTiketMasuk}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontFamily: "Poppins",
                                           fontSize: 20,
                                           color: green600,
@@ -239,7 +238,7 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                               color: slate50),
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.exposure_minus_1_rounded,
                                             color: slate500,
                                             size: 16,
@@ -261,7 +260,7 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                                           alignment: Alignment.center,
                                           child: Text(
                                             jumlahTicket.text,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 16,
                                               color: slate400,
@@ -290,7 +289,7 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                               color: slate50),
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.plus_one_rounded,
                                             color: slate500,
                                             size: 16,
@@ -314,7 +313,7 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                 height: size.height * (1 / 5),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
@@ -349,66 +348,69 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                           ),
                         ],
                       ),
-                      Container(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (jumlahTicket.text == '0') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  showSnackBar(
-                                      "Wrong!",
-                                      "Minimal jumlah pembelian ticket adalah 1",
-                                      ContentType.failure));
-                            } else {
-                              final uuid = Uuid().v1();
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              String? idUser = await prefs.getString('id_user');
-                              await TicketRepository().orderTicketApi(
-                                Ticket(
-                                    idTicket: uuid,
-                                    idUser: idUser,
-                                    idDestinasi: showDestinasi!.id,
-                                    jumlahTicket: jumlahTicket.text,
-                                    tanggalTicket: tanggalTicket.text,
-                                    totalHarga: totalHargaTicket.text),
-                              );
-                              // await TicketRepository().orderTicket(
-                              //     Ticket(
-                              //         idTicket: uuid,
-                              //         idDestinasi: showDestinasi!.id,
-                              //         jumlahTicket: jumlahTicket.text,
-                              //         tanggalTicket: tanggalTicket.text,
-                              //         totalHarga: totalHargaTicket.text),
-                              //     idUser!);
-                              // ignore: use_build_context_synchronously
-                              saveIdTicket(uuid);
-                              Navigator.of(context, rootNavigator: true)
-                                  .pushReplacementNamed('/order_success');
-                            }
-                          },
-                          style: ButtonStyle(
-                            visualDensity:
-                                VisualDensity.adaptivePlatformDensity,
-                            enableFeedback: false,
-                            overlayColor: MaterialStatePropertyAll(green700),
-                            splashFactory: NoSplash.splashFactory,
-                            backgroundColor: MaterialStatePropertyAll(green600),
-                            shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            fixedSize: MaterialStateProperty.all(
-                              Size(size.width - 48, 48.0),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (jumlahTicket.text == '0') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                showSnackBar(
+                                    "Wrong!",
+                                    "Minimal jumlah pembelian ticket adalah 1",
+                                    ContentType.failure));
+                          } else if (DateTime.parse(tanggalTicket.text)
+                                  .millisecondsSinceEpoch <
+                              DateTime.parse(DateFormat('yyyy-MM-dd')
+                                      .format(DateTime.now()))
+                                  .millisecondsSinceEpoch) {
+                            // print(DateTime.parse(DateFormat('yyyy-MM-dd')
+                            //         .format(DateTime.now()))
+                            //     .millisecondsSinceEpoch);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                showSnackBar("Wrong!", "Tanggal ticket salah!",
+                                    ContentType.failure));
+                          } else {
+                            final uuid = const Uuid().v1();
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String? idUser = prefs.getString('id_user');
+                            await TicketRepository().orderTicketApi(
+                              Ticket(
+                                  idTicket: uuid,
+                                  idUser: idUser,
+                                  idDestinasi: showDestinasi!.id,
+                                  jumlahTicket: jumlahTicket.text,
+                                  tanggalTicket: tanggalTicket.text,
+                                  totalHarga: totalHargaTicket.text),
+                            );
+                            // ignore: use_build_context_synchronously
+                            saveIdTicket(uuid);
+                            // ignore: use_build_context_synchronously
+                            Navigator.of(context, rootNavigator: true)
+                                .pushReplacementNamed('/order_success');
+                          }
+                        },
+                        style: ButtonStyle(
+                          visualDensity: VisualDensity.adaptivePlatformDensity,
+                          enableFeedback: false,
+                          overlayColor:
+                              const MaterialStatePropertyAll(green700),
+                          splashFactory: NoSplash.splashFactory,
+                          backgroundColor:
+                              const MaterialStatePropertyAll(green600),
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text(
-                            "Beli Ticket",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "Poppins",
-                            ),
+                          fixedSize: MaterialStateProperty.all(
+                            Size(size.width - 48, 48.0),
+                          ),
+                        ),
+                        child: const Text(
+                          "Beli Ticket",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Poppins",
                           ),
                         ),
                       ),
@@ -425,10 +427,9 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
 
   saveIdTicket(String id) async {
     final prefs = await SharedPreferences.getInstance();
-    print(id);
     await prefs
         .setString('id_ticket', id)
-        .then((value) => print("Success set id ticket"))
-        .onError((error, stackTrace) => print("Error : $error"));
+        .then((value) => log("Success set id ticket"))
+        .onError((error, stackTrace) => log("Error : $error"));
   }
 }

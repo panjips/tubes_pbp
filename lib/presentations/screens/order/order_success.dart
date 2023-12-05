@@ -34,7 +34,7 @@ class SuccessOrderScreen extends StatelessWidget {
                     Container(
                       width: size.width * (1.8 / 4),
                       height: size.width * (1.8 / 4),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: green600,
                       ),
@@ -47,8 +47,8 @@ class SuccessOrderScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 28),
+              const Padding(
+                padding: EdgeInsets.only(top: 28),
                 child: Text(
                   'Transaction Success!',
                   style: TextStyle(
@@ -59,8 +59,8 @@ class SuccessOrderScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
                 child: Text(
                   'Happy Holiday!',
                   style: TextStyle(
@@ -81,38 +81,36 @@ class SuccessOrderScreen extends StatelessWidget {
             const EdgeInsets.only(top: 12, right: 24, left: 24, bottom: 24),
         child: Row(
           children: [
-            Container(
-              child: ElevatedButton(
-                onPressed: () {
-                  createPdf(context);
-                },
-                style: ButtonStyle(
-                  visualDensity: VisualDensity.adaptivePlatformDensity,
-                  enableFeedback: false,
-                  overlayColor: MaterialStatePropertyAll(green700),
-                  splashFactory: NoSplash.splashFactory,
-                  backgroundColor: MaterialStatePropertyAll(green600),
-                  shape: MaterialStatePropertyAll(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  fixedSize: MaterialStateProperty.all(
-                    Size(size.width * (2.5 / 4) - 32, 48.0),
+            ElevatedButton(
+              onPressed: () {
+                createPdf(context);
+              },
+              style: ButtonStyle(
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+                enableFeedback: false,
+                overlayColor: const MaterialStatePropertyAll(green700),
+                splashFactory: NoSplash.splashFactory,
+                backgroundColor: const MaterialStatePropertyAll(green600),
+                shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: Text(
-                  "Print Ticket",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Poppins",
-                  ),
+                fixedSize: MaterialStateProperty.all(
+                  Size(size.width * (2.5 / 4) - 32, 48.0),
+                ),
+              ),
+              child: const Text(
+                "Print Ticket",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Poppins",
                 ),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 16),
+              margin: const EdgeInsets.only(left: 16),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true)
@@ -121,9 +119,9 @@ class SuccessOrderScreen extends StatelessWidget {
                 style: ButtonStyle(
                   visualDensity: VisualDensity.adaptivePlatformDensity,
                   enableFeedback: false,
-                  overlayColor: MaterialStatePropertyAll(blue600),
+                  overlayColor: const MaterialStatePropertyAll(blue600),
                   splashFactory: NoSplash.splashFactory,
-                  backgroundColor: MaterialStatePropertyAll(blue500),
+                  backgroundColor: const MaterialStatePropertyAll(blue500),
                   shape: MaterialStatePropertyAll(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -133,7 +131,7 @@ class SuccessOrderScreen extends StatelessWidget {
                     Size(size.width * (1.5 / 4) - 32, 48.0),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   "Finish",
                   style: TextStyle(
                     fontSize: 14,

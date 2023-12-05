@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +16,7 @@ import 'package:test_slicing/presentations/widgets/input_form.dart';
 import 'package:test_slicing/presentations/widgets/snackbar.dart';
 import 'package:test_slicing/utils/constant.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -43,7 +42,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void getUserLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idUser = await prefs.getString('id_user');
+    String? idUser = prefs.getString('id_user');
 
     User? userData = await AuthRepository().showProfile(idUser!);
     setState(() {
@@ -124,15 +123,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const EdgeInsets.only(top: 12, right: 24, left: 24, bottom: 24),
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 width: 96,
                 height: 96,
                 child: Stack(
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        userLogin!.urlPhoto != null
+                      child: CachedNetworkImage(
+                        imageUrl: userLogin!.urlPhoto != null
                             ? userLogin!.urlPhoto!
                             : "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
                         width: 96,
@@ -396,13 +395,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 lastName: lastName.text,
                 birthDate: birthDate.text,
                 jenisKelamin: jenisKelamin.text);
-
             await AuthRepository().editProfileUser(user, userLogin!.id!);
+            // ignore: use_build_context_synchronously
             ScaffoldMessenger.of(context).showSnackBar(showSnackBar(
                 "Success!", "Berhasil edit profile!", ContentType.success));
+            // ignore: use_build_context_synchronously
             PersistentNavBarNavigator.pushNewScreen(
               context,
-              screen: Navigation(index: 3),
+              screen: const Navigation(index: 3),
               withNavBar: true,
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             );

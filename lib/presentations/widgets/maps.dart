@@ -32,7 +32,7 @@ class _MapsState extends State<Maps> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
+      child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * (1 / 4),
           child: ClipRRect(
@@ -66,13 +66,13 @@ class _MapsState extends State<Maps> {
                             Marker(
                               point: LatLng(
                                   _position!.latitude, _position!.longitude),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.person_pin_circle,
                                 color: blue500,
                                 size: 36,
                               ),
                             ),
-                            Marker(
+                            const Marker(
                               point: LatLng(-7.7524801, 110.4910196),
                               child: Icon(
                                 Icons.pin_drop,
@@ -83,7 +83,7 @@ class _MapsState extends State<Maps> {
                           ])
                         ],
                       )
-                    : Center(child: CircularProgressIndicator()),
+                    : const Center(child: CircularProgressIndicator()),
               ],
             ),
           )),

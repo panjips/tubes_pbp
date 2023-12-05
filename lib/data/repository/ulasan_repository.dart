@@ -4,9 +4,10 @@ import 'package:http/http.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 
 class UlasanRepository {
-  static final String url = '10.0.2.2:8000';
+  static const String url = '10.0.2.2:8000';
+  // static final String url = '192.168.51.189:8000';
   // static final String url = 'pbp-pariwisata-api.000webhostapp.com';
-  static final String endpoint = '/api/ulasan/';
+  static const String endpoint = '/api/ulasan/';
 
   Future<List<Ulasan>> getUlasan(String idDestinasi) async {
     var response = await get(Uri.http(url, "$endpoint$idDestinasi"));
@@ -23,7 +24,6 @@ class UlasanRepository {
     var response = await post(Uri.http(url, endpoint),
         headers: {"Content-Type": "application/json"},
         body: ulasan.toRawJson());
-    print(json.decode(response.body));
     if (response.statusCode != 200) throw Exception(response.reasonPhrase);
   }
 

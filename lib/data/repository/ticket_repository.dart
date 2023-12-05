@@ -7,9 +7,10 @@ import 'package:test_slicing/data/model/ticket.dart';
 class TicketRepository {
   final dbFirebase = FirebaseFirestore.instance;
 
-  static final String url = '10.0.2.2:8000';
+  static const String url = '10.0.2.2:8000';
+  // static final String url = '192.168.51.189:8000';
   // static final String url = 'pbp-pariwisata-api.000webhostapp.com';
-  static final String endpoint = '/api/ticket';
+  static const String endpoint = '/api/ticket';
 
   Future<void> orderTicketApi(Ticket ticket) async {
     // print(ticket.toApiRawJson());
@@ -18,8 +19,6 @@ class TicketRepository {
         body: ticket.toApiRawJson());
     // print(json.encode(response.body));
     if (response.statusCode != 200) throw Exception(response.reasonPhrase);
-
-    print(response);
   }
 
   Future<Ticket> findTicketApi(String idTicket) async {
@@ -42,4 +41,37 @@ class TicketRepository {
 
     return ticket;
   }
+
+  Future<void> deleteTicket(String idTicket) async {
+    var response = await delete(Uri.http(url, "$endpoint/$idTicket"));
+    if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+    // print(response.body);
+  }
+
+  Future<void> rescheduleTicket(String idTicket, String newTanggal) async {
+    var response = await put(Uri.http(url, "$endpoint/$idTicket"), headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    }, body: {
+      "tanggal_ticket": newTanggal,
+    });
+    // print(response.body);
+    if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+  }
+
+  // Future<void> rescheduleTicket(String idTicket, String newTanggal) async {
+  //   try {
+  //     var request =
+  //         MultipartRequest("POST", Uri.http(url, "$endpoint/$idTicket"));
+  //     request.fields['_method'] = "PUT";
+  //     request.fields['tanggal_ticket'] = newTanggal;
+
+  //     final response = await request.send();
+  //     final responsed = await Response.fromStream(response);
+
+  //     print(responsed.body);
+  //     if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+  //   } catch (e) {
+  //     return Future.error(e.toString());
+  //   }
+  // }
 }

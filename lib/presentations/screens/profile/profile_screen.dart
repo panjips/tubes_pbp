@@ -18,11 +18,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idUser = await prefs.getString('id_user');
+    String? idUser = prefs.getString('id_user');
     User? userData = await AuthRepository().showProfile(idUser!);
     setState(() {
       data = userData;
-      Future.delayed(Duration(seconds: 5));
+      Future.delayed(const Duration(seconds: 5));
     });
   }
 

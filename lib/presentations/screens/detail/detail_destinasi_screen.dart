@@ -24,7 +24,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idDestinasi = await prefs.getString('id_destinasi');
+    String? idDestinasi = prefs.getString('id_destinasi');
     String? profile = prefs.getString('base64profile');
     List<Destinasi>? listDestinasi =
         await DestinasiRepositroy().getAllDestinasiFromApi();
@@ -32,7 +32,7 @@ class _DetailScreenState extends State<DetailScreen> {
     setState(() {
       fotoProfile = profile;
       listUlasan = ulasan;
-      for (var element in listDestinasi!) {
+      for (var element in listDestinasi) {
         if (element.id == idDestinasi) {
           showDestinasi = element;
         }
@@ -67,7 +67,7 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             FeatherIcons.chevronLeft,
             size: 32,
             color: slate900,
@@ -152,7 +152,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
               const Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.only(bottom: 12),
                 child: Text(
                   "Additional Informations",
                   style: TextStyle(
@@ -204,7 +204,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
               Row(
@@ -254,7 +254,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Ratings and Reviews",
                       style: TextStyle(
                           fontFamily: "Poppins",
@@ -304,64 +304,33 @@ class _DetailScreenState extends State<DetailScreen> {
       floatingActionButton: Padding(
         padding:
             const EdgeInsets.only(top: 12, right: 24, left: 24, bottom: 24),
-        child: Row(
-          children: [
-            Container(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true)
-                      .pushNamed("/order");
-                },
-                style: ButtonStyle(
-                  visualDensity: VisualDensity.adaptivePlatformDensity,
-                  enableFeedback: false,
-                  overlayColor: MaterialStatePropertyAll(green700),
-                  splashFactory: NoSplash.splashFactory,
-                  backgroundColor: MaterialStatePropertyAll(green600),
-                  shape: MaterialStatePropertyAll(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  fixedSize: MaterialStateProperty.all(
-                    Size(size.width * (3 / 4) - 32, 48.0),
-                  ),
-                ),
-                child: Text(
-                  "Beli Ticket",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Poppins",
-                  ),
-                ),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pushNamed("/order");
+          },
+          style: ButtonStyle(
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            enableFeedback: false,
+            overlayColor: const MaterialStatePropertyAll(green700),
+            splashFactory: NoSplash.splashFactory,
+            backgroundColor: const MaterialStatePropertyAll(green600),
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-            SizedBox(
-              width: 16,
+            fixedSize: MaterialStateProperty.all(
+              Size(size.width - 32, 48.0),
             ),
-            Container(
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ButtonStyle(
-                  visualDensity: VisualDensity.adaptivePlatformDensity,
-                  enableFeedback: false,
-                  overlayColor: MaterialStatePropertyAll(blue600),
-                  splashFactory: NoSplash.splashFactory,
-                  backgroundColor: MaterialStatePropertyAll(blue500),
-                  shape: MaterialStatePropertyAll(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  fixedSize: MaterialStateProperty.all(
-                    Size(size.width * (1 / 4) - 32, 48.0),
-                  ),
-                ),
-                child: Icon(FeatherIcons.map),
-              ),
+          ),
+          child: const Text(
+            "Beli Ticket",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Poppins",
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -413,7 +382,7 @@ class _UlasanCardState extends State<UlasanCard> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 56,
                     height: 56,
                     child: ClipRRect(
@@ -443,13 +412,13 @@ class _UlasanCardState extends State<UlasanCard> {
                             userReview == null
                                 ? ""
                                 : "${userReview!.firstName} ${userReview!.lastName}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: slate900,
                             ),
-                            overflow: TextOverflow.fade,
+                            overflow: TextOverflow.clip,
                           ),
                         ),
                         ClipRRect(
@@ -460,7 +429,7 @@ class _UlasanCardState extends State<UlasanCard> {
                             color: goldStar.withOpacity(0.3),
                             child: Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.star,
                                   color: goldStar,
                                   size: 16,
@@ -469,7 +438,7 @@ class _UlasanCardState extends State<UlasanCard> {
                                   padding: const EdgeInsets.only(left: 4),
                                   child: Text(
                                     widget.ulasan.rating!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: "Poppins",
                                       fontSize: 10,
                                       fontWeight: FontWeight.w600,
@@ -491,7 +460,7 @@ class _UlasanCardState extends State<UlasanCard> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     widget.ulasan.ulasan!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 12,
                       fontWeight: FontWeight.normal,

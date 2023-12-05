@@ -16,7 +16,7 @@ class PreviewScreen extends StatelessWidget {
               .pushReplacementNamed("/nav"),
           icon: const Icon(Icons.arrow_back_outlined),
         ),
-        title: Text("Preview"),
+        title: const Text("Preview"),
         centerTitle: true,
       ),
       body: PdfPreview(

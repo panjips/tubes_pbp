@@ -11,9 +11,9 @@ Container AuthButton(void Function() onPressed,
       style: ButtonStyle(
         visualDensity: VisualDensity.adaptivePlatformDensity,
         enableFeedback: false,
-        overlayColor: MaterialStatePropertyAll(blue600),
+        overlayColor: const MaterialStatePropertyAll(blue600),
         splashFactory: NoSplash.splashFactory,
-        backgroundColor: MaterialStatePropertyAll(blue500),
+        backgroundColor: const MaterialStatePropertyAll(blue500),
         shape: MaterialStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -25,7 +25,7 @@ Container AuthButton(void Function() onPressed,
       ),
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
           fontFamily: "Poppins",

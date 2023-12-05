@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
-import 'package:test_slicing/data/repository/destinasi_respository.dart';
 import 'package:test_slicing/data/repository/ulasan_repository.dart';
 import 'package:test_slicing/presentations/screens/ulasan/tambah_ulasan_screen.dart';
 import 'package:test_slicing/utils/constant.dart';
@@ -23,8 +22,8 @@ class _UlasanScreenState extends State<UlasanScreen> {
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idDestinasi = await prefs.getString('id_destinasi');
-    String? idUser = await prefs.getString('id_user');
+    String? idDestinasi = prefs.getString('id_destinasi');
+    String? idUser = prefs.getString('id_user');
     List<Ulasan>? listUlasan = await UlasanRepository().getUlasan(idDestinasi!);
 
     bool find =
@@ -59,13 +58,13 @@ class _UlasanScreenState extends State<UlasanScreen> {
         leading: IconButton(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          icon: Icon(
+          icon: const Icon(
             FeatherIcons.chevronLeft,
             size: 32,
             color: slate900,
           ),
           onPressed: () => Navigator.of(context, rootNavigator: true)
-              .popUntil(ModalRoute.withName('/detail')),
+              .popAndPushNamed('/detail'),
         ),
         backgroundColor: slate50,
         elevation: 0.0,
@@ -137,39 +136,37 @@ class _UlasanScreenState extends State<UlasanScreen> {
       floatingActionButton: Padding(
         padding:
             const EdgeInsets.only(top: 12, right: 24, left: 24, bottom: 24),
-        child: Container(
-          child: ElevatedButton(
-            onPressed: () {
-              if (isWriteReview) {
-              } else {
-                Navigator.of(context, rootNavigator: true)
-                    .popAndPushNamed('/tambah_ulasan');
-              }
-            },
-            style: ButtonStyle(
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-              enableFeedback: false,
-              overlayColor:
-                  isWriteReview ? null : MaterialStatePropertyAll(blue600),
-              splashFactory: NoSplash.splashFactory,
-              backgroundColor:
-                  MaterialStatePropertyAll(isWriteReview ? slate200 : blue500),
-              shape: MaterialStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              fixedSize: MaterialStateProperty.all(
-                Size(size.width, 48.0),
+        child: ElevatedButton(
+          onPressed: () {
+            if (isWriteReview) {
+            } else {
+              Navigator.of(context, rootNavigator: true)
+                  .popAndPushNamed('/tambah_ulasan');
+            }
+          },
+          style: ButtonStyle(
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            enableFeedback: false,
+            overlayColor:
+                isWriteReview ? null : const MaterialStatePropertyAll(blue600),
+            splashFactory: NoSplash.splashFactory,
+            backgroundColor:
+                MaterialStatePropertyAll(isWriteReview ? slate200 : blue500),
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: Text(
-              "Write a review",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Poppins",
-              ),
+            fixedSize: MaterialStateProperty.all(
+              Size(size.width, 48.0),
+            ),
+          ),
+          child: const Text(
+            "Write a review",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Poppins",
             ),
           ),
         ),
@@ -199,8 +196,8 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idUser = await prefs.getString('id_user');
-    String? idDestinasi = await prefs.getString('id_destinasi');
+    String? idUser = prefs.getString('id_user');
+    String? idDestinasi = prefs.getString('id_destinasi');
     User? user = await AuthRepository().showProfile(widget.ulasan.idPengguna!);
 
     // print(user);
@@ -237,7 +234,7 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 56,
                       height: 56,
                       child: ClipRRect(
@@ -267,7 +264,7 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                               userReview == null
                                   ? ""
                                   : "${userReview!.firstName} ${userReview!.lastName}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -284,7 +281,7 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                               color: goldStar.withOpacity(0.3),
                               child: Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.star,
                                     color: goldStar,
                                     size: 16,
@@ -293,7 +290,7 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                                     padding: const EdgeInsets.only(left: 4),
                                     child: Text(
                                       widget.ulasan.rating!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: "Poppins",
                                         fontSize: 10,
                                         fontWeight: FontWeight.w600,
@@ -316,8 +313,8 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                     enableFeedback: false,
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
-                    padding: EdgeInsets.only(bottom: 2),
-                    constraints: BoxConstraints(),
+                    padding: const EdgeInsets.only(bottom: 2),
+                    constraints: const BoxConstraints(),
                     onPressed: () {
                       final RenderBox renderBox =
                           key.currentContext?.findRenderObject() as RenderBox;
@@ -338,7 +335,7 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                             // _buildPopupMenuItem('Edit'),
                             PopupMenuItem(
                               child: TextButton(
-                                child: Text(
+                                child: const Text(
                                   'Edit',
                                   style: TextStyle(
                                     fontFamily: "Poppins",
@@ -361,7 +358,7 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                             ),
                             PopupMenuItem(
                               child: TextButton(
-                                child: Text(
+                                child: const Text(
                                   'Delete',
                                   style: TextStyle(
                                     fontFamily: "Poppins",
@@ -376,12 +373,13 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                                   //     currentDestinasi!, widget.ulasan);
                                   await UlasanRepository()
                                       .deleteUlasan(widget.ulasan.id!);
+                                  // ignore: use_build_context_synchronously
                                   Navigator.pushReplacement(
                                     context,
                                     PageRouteBuilder(
                                       pageBuilder:
                                           (context, animation1, animation2) =>
-                                              UlasanScreen(),
+                                              const UlasanScreen(),
                                       transitionDuration: Duration.zero,
                                       reverseTransitionDuration: Duration.zero,
                                     ),
@@ -403,7 +401,7 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 widget.ulasan.ulasan!,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 12,
                   fontWeight: FontWeight.normal,

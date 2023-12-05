@@ -259,19 +259,19 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                       ),
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(
-                                  1900), // Set an appropriate minimum date
-                              lastDate: DateTime.now(),
-                            );
-                            if (pickedDate != null) {
-                              String formattedDate =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
-                              setState(() {
-                                birthDate.text = formattedDate;
-                              });
-                            }
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate:
+                              DateTime(1900), // Set an appropriate minimum date
+                          lastDate: DateTime.now(),
+                        );
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                          setState(() {
+                            birthDate.text = formattedDate;
+                          });
+                        }
                       },
                     ),
                     labelInput(text: "Jenis Kelamin", bottom: 4.0, top: 4.0),
@@ -337,26 +337,81 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
       floatingActionButton: Padding(
         padding:
             const EdgeInsets.only(top: 12, right: 24, left: 24, bottom: 24),
-        child: AuthButton(() async {
+        child: AuthButton(() {
           if (_formKey.currentState!.validate()) {
-            User user = User(
-                email: email.text,
-                username: username.text,
-                password: password.text,
-                firstName: firstName.text,
-                lastName: lastName.text,
-                birthDate: birthDate.text,
-                jenisKelamin: jenisKelamin.text);
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text(
+                  "Register",
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: green600,
+                  ),
+                ),
+                content: const Text(
+                  "Yakin ingin melakukan register?",
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: slate900,
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      "Tidak",
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                        color: slate900,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      User user = User(
+                          email: email.text,
+                          username: username.text,
+                          password: password.text,
+                          firstName: firstName.text,
+                          lastName: lastName.text,
+                          birthDate: birthDate.text,
+                          jenisKelamin: jenisKelamin.text);
 
-            // await AuthRepository().createUser(user);
-            await AuthRepository().registerUser(user);
-            ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Success!",
-                "Berhasil registrasi, masuk sekarang!", ContentType.success));
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SignInScreen(),
-                ));
+                      await AuthRepository().registerUser(user);
+                      // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(showSnackBar(
+                          "Success!",
+                          "Berhasil registrasi, masuk sekarang!",
+                          ContentType.success));
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignInScreen(),
+                          ));
+                    },
+                    child: const Text(
+                      "Yakin",
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                        color: slate900,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
         }, size: size, text: "Sign up"),
       ),

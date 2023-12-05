@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/presentations/screens/navigation.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -19,16 +23,16 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? searchKeyword = await prefs.getString('id_search');
+    String? searchKeyword = prefs.getString('id_search');
     List<Destinasi>? dataDestinasi =
         await DestinasiRepositroy().getAllDestinasiFromApi();
-    List<Destinasi>? destinasiSearch = dataDestinasi?.where((element) {
+    List<Destinasi>? destinasiSearch = dataDestinasi.where((element) {
       return element.nama!.contains(searchKeyword!);
     }).toList();
 
     setState(() {
       searchDestinasi = destinasiSearch;
-      print(searchDestinasi?.first.nama);
+      // print(searchDestinasi?.first.nama);
     });
   }
 
@@ -58,12 +62,17 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             FeatherIcons.chevronLeft,
             size: 32,
             color: slate900,
           ),
-          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          onPressed: () => PersistentNavBarNavigator.pushNewScreen(
+            context,
+            screen: const Navigation(index: 1),
+            withNavBar: true,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          ),
         ),
         backgroundColor: slate50,
         elevation: 0.0,
@@ -147,6 +156,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           saveSearchKeyword(search.text);
+                          Navigator.of(context, rootNavigator: true)
+                              .pushNamed("/search");
                         },
                         icon: const Icon(Icons.search),
                         color: Colors.grey,
@@ -196,16 +207,16 @@ class _SearchScreenState extends State<SearchScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs
         .setString('id_destinasi', id)
-        .then((value) => print("Success set id destinasi $id"))
-        .onError((error, stackTrace) => print("Error : $error"));
+        .then((value) => log("Success set id destinasi $id"))
+        .onError((error, stackTrace) => log("Error : $error"));
   }
 
   saveSearchKeyword(String id) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs
         .setString('id_search', id)
-        .then((value) => print("Success set id search $id"))
-        .onError((error, stackTrace) => print("Error : $error"));
+        .then((value) => log("Success set id search $id"))
+        .onError((error, stackTrace) => log("Error : $error"));
   }
 }
 
@@ -227,7 +238,7 @@ class SearchDestination extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: size.width,
           height: size.height * (1 / 5),
           child: ClipRRect(
@@ -252,7 +263,7 @@ class SearchDestination extends StatelessWidget {
               margin: const EdgeInsets.only(top: 6),
               child: Text(
                 nama,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -264,7 +275,7 @@ class SearchDestination extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   FeatherIcons.mapPin,
                   size: 14,
                   color: slate400,
@@ -273,7 +284,7 @@ class SearchDestination extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 4),
                   child: Text(
                     alamat,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 14,
                       fontWeight: FontWeight.normal,

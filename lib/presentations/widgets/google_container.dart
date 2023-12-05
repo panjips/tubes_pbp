@@ -3,7 +3,7 @@ import 'package:test_slicing/utils/constant.dart';
 
 Container GoogleButton(Size size, String text) {
   return Container(
-    margin: EdgeInsets.only(top: 16),
+    margin: const EdgeInsets.only(top: 16),
     width: size.width,
     height: 48,
     decoration: BoxDecoration(
@@ -16,16 +16,16 @@ Container GoogleButton(Size size, String text) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image(
+        const Image(
           height: 24,
           width: 24,
           image: AssetImage('images/avatar-icon/google-icon.png'),
         ),
         Container(
-          margin: EdgeInsets.only(left: 24),
+          margin: const EdgeInsets.only(left: 24),
           child: Text(
-            '${text} With Gmail',
-            style: TextStyle(
+            '$text With Gmail',
+            style: const TextStyle(
               fontSize: 14,
               fontFamily: "Poppins",
               color: slate900,

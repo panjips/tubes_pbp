@@ -49,7 +49,7 @@ class User {
       'last_name': lastName,
       'tanggal_lahir': birthDate,
       'jenis_kelamin': jenisKelamin,
-      'image': null,
+      // 'image': null,
       // 'tickets': tickets?.map((e) => e.toJson()),
     };
   }

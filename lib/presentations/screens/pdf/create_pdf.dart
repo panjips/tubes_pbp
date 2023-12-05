@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -24,8 +23,8 @@ Future<void> createPdf(
   BuildContext context,
 ) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? idPengguna = await prefs.getString('id_user');
-  String? idTicket = await prefs.getString('id_ticket');
+  String? idPengguna = prefs.getString('id_user');
+  String? idTicket = prefs.getString('id_ticket');
 
   Ticket dataTicket = await TicketRepository().findTicketApi(idTicket!);
 
@@ -34,15 +33,14 @@ Future<void> createPdf(
   Destinasi? dataDestinasi =
       await DestinasiRepositroy().getDestinasiFromApi(dataTicket.idDestinasi!);
 
-  final imageBytes =
-      await fileFromImageUrl(dataUser!.urlPhoto!, dataTicket.idTicket!);
+  final imageBytes = await fileFromImageUrl(
+      dataUser.urlPhoto ??
+          "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.",
+      dataTicket.idTicket!);
 
   pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
     return pw.MemoryImage(imageBytes);
   }
-
-  print(dataTicket);
-  print(dataUser);
 
   final doc = pw.Document();
   final pdfTheme = pw.PageTheme(
@@ -60,7 +58,7 @@ Future<void> createPdf(
 
   final List<CustomRow> elements = [
     CustomRow('Item Name', "Item Price", "Amount", "Total Payment"),
-    CustomRow("Ticket ${dataDestinasi!.nama}", dataDestinasi.hargaTiketMasuk!,
+    CustomRow("Ticket ${dataDestinasi.nama}", dataDestinasi.hargaTiketMasuk!,
         dataTicket.jumlahTicket!, dataTicket.totalHarga!),
   ];
 
@@ -81,7 +79,7 @@ Future<void> createPdf(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
                   pw.Padding(
-                    padding: pw.EdgeInsets.only(left: 24),
+                    padding: const pw.EdgeInsets.only(left: 24),
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
@@ -97,7 +95,7 @@ Future<void> createPdf(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               valueDataDiri(
-                                  "${dataUser!.firstName} ${dataUser.lastName}")
+                                  "${dataUser.firstName} ${dataUser.lastName}")
                             ],
                           ),
                         ),
@@ -142,6 +140,7 @@ Future<void> createPdf(
     ),
   );
 
+  // ignore: use_build_context_synchronously
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -176,7 +175,7 @@ pw.Center footerPDF(String formattedDate) {
   return pw.Center(
     child: pw.Text(
       'Created At $formattedDate',
-      style: pw.TextStyle(fontSize: 10, color: PdfColors.blue),
+      style: const pw.TextStyle(fontSize: 10, color: PdfColors.blue),
     ),
   );
 }
@@ -185,7 +184,7 @@ pw.Padding imageFormInput(
     pw.ImageProvider Function(Uint8List imageBytes) pdfImageProvider,
     Uint8List image) {
   return pw.Padding(
-    padding: pw.EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    padding: const pw.EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     child: pw.FittedBox(
       child: pw.Image(pdfImageProvider(image), width: 64),
       fit: pw.BoxFit.fitHeight,
@@ -221,7 +220,7 @@ pw.Padding greetingThanks() {
 
 pw.Padding barcodeKotak(String id) {
   return pw.Padding(
-    padding: pw.EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 12),
     child: pw.Center(
       child: pw.BarcodeWidget(
         barcode:

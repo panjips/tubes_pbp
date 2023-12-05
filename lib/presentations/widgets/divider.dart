@@ -3,17 +3,17 @@ import 'package:test_slicing/utils/constant.dart';
 
 Container DividerAuth() {
   return Container(
-    margin: EdgeInsets.symmetric(vertical: 12),
+    margin: const EdgeInsets.symmetric(vertical: 12),
     child: Stack(
       alignment: Alignment.center,
       children: [
-        Divider(
+        const Divider(
           color: slate300,
         ),
         Container(
           width: 50,
           color: slate50,
-          child: Text(
+          child: const Text(
             "or",
             textAlign: TextAlign.center,
             style: TextStyle(

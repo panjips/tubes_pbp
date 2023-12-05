@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_slicing/presentations/routes/routes.dart';
 import 'package:test_slicing/presentations/screens/auth/registrasi_screen.dart';

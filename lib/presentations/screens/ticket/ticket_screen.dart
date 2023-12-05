@@ -1,15 +1,22 @@
+import 'dart:developer';
+
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/ticket.dart';
-import 'package:test_slicing/data/model/user.dart';
-import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
 import 'package:test_slicing/data/repository/ticket_repository.dart';
+import 'package:test_slicing/presentations/screens/navigation.dart';
 import 'package:test_slicing/presentations/screens/pdf/create_pdf.dart';
+import 'package:test_slicing/presentations/widgets/easy_date_timeline_widget/easy_date_timeline_widget.dart';
+import 'package:test_slicing/presentations/widgets/snackbar.dart';
+import 'package:test_slicing/properties/day_style.dart';
+import 'package:test_slicing/properties/easy_day_props.dart';
+import 'package:test_slicing/properties/easy_header_props.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 class TicketScreen extends StatefulWidget {
@@ -26,13 +33,11 @@ class _TicketScreenState extends State<TicketScreen> {
 
   Future<void> getTicket() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idUser = await prefs.getString('id_user');
-    // User? userData = await AuthRepository().getUserDetail(idUser!);
+    String? idUser = prefs.getString('id_user');
     List<Ticket>? ticket = await TicketRepository().showUserTicket(idUser!);
     setState(() {
-      // allTicket = userData!.tickets;
       allTicket = ticket;
-      print("First Ticket : ${allTicket!.last.idDestinasi}");
+      log("First Ticket : ${allTicket!.last.idDestinasi}");
       getDestinasi();
     });
   }
@@ -124,9 +129,9 @@ class _TicketScreenState extends State<TicketScreen> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: Text(
+        title: const Text(
           "Ticket",
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: "Poppins",
             fontSize: 20,
             fontWeight: FontWeight.w500,
@@ -140,6 +145,12 @@ class _TicketScreenState extends State<TicketScreen> {
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemBuilder: (context, index) {
+            // if (DateTime.parse(allTicket![index].tanggalTicket!)
+            //         .millisecondsSinceEpoch >=
+            //     DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime.now()))
+            //         .millisecondsSinceEpoch) {
+            // }
+            // return null;
             return TicketContainer(
                 size: size,
                 destinasi: destinasiByTicket[index],
@@ -155,7 +166,7 @@ class _TicketScreenState extends State<TicketScreen> {
   }
 }
 
-class TicketContainer extends StatelessWidget {
+class TicketContainer extends StatefulWidget {
   const TicketContainer({
     super.key,
     required this.size,
@@ -167,10 +178,16 @@ class TicketContainer extends StatelessWidget {
   final Ticket ticket;
 
   @override
+  State<TicketContainer> createState() => _TicketContainerState();
+}
+
+class _TicketContainerState extends State<TicketContainer> {
+  String newTanggal = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  @override
   Widget build(BuildContext context) {
     return Container(
-      width: size.width,
-      height: size.height * (1 / 7),
+      width: widget.size.width,
+      height: widget.size.height * (1 / 7),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -184,19 +201,19 @@ class TicketContainer extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: CachedNetworkImage(
-                imageUrl: destinasi.image == null
+                imageUrl: widget.destinasi.image == null
                     ? "https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/destinasi%2Fbanner.png?alt=media&token=44df1d34-7c30-42aa-9e26-385b1a441de4"
-                    : destinasi.image!,
+                    : widget.destinasi.image!,
                 errorWidget: (context, url, error) => const Icon(Icons.error),
                 httpHeaders: const {
                   "Connection": "Keep-Alive",
                   "Keep-Alive": "timeout=10, max=10000",
                 },
-                width: size.width * (1 / 4),
+                width: widget.size.width * (1 / 4),
                 fit: BoxFit.fill,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
             Flexible(
@@ -204,7 +221,7 @@ class TicketContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    destinasi.nama!,
+                    widget.destinasi.nama!,
                     style: const TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 14,
@@ -245,7 +262,7 @@ class TicketContainer extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "  : ${ticket.tanggalTicket!}",
+                            "  : ${widget.ticket.tanggalTicket!}",
                             style: const TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 10,
@@ -255,7 +272,7 @@ class TicketContainer extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            "  : ${ticket.jumlahTicket!}",
+                            "  : ${widget.ticket.jumlahTicket!}",
                             style: const TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 10,
@@ -271,14 +288,14 @@ class TicketContainer extends StatelessWidget {
                   Row(
                     children: [
                       IconButton(
-                        constraints: BoxConstraints(),
-                        padding: EdgeInsets.only(top: 2),
+                        constraints: const BoxConstraints(),
+                        padding: const EdgeInsets.only(top: 2),
                         alignment: Alignment.topLeft,
                         onPressed: () {
-                          saveIdTicket(ticket.idTicket!);
+                          saveIdTicket(widget.ticket.idTicket!);
                           createPdf(context);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.print,
                           color: blue500,
                         ),
@@ -286,8 +303,8 @@ class TicketContainer extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: IconButton(
-                          constraints: BoxConstraints(),
-                          padding: EdgeInsets.only(top: 2),
+                          constraints: const BoxConstraints(),
+                          padding: const EdgeInsets.only(top: 2),
                           alignment: Alignment.topLeft,
                           onPressed: () {
                             showDialog(
@@ -327,7 +344,24 @@ class TicketContainer extends StatelessWidget {
                                           ),
                                         ),
                                         TextButton(
-                                          onPressed: () {},
+                                          onPressed: () async {
+                                            TicketRepository().deleteTicket(
+                                                widget.ticket.idTicket!);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(showSnackBar(
+                                                    "Success!",
+                                                    "Berhasil delete ticket!",
+                                                    ContentType.success));
+                                            PersistentNavBarNavigator
+                                                .pushNewScreen(
+                                              context,
+                                              screen:
+                                                  const Navigation(index: 2),
+                                              withNavBar: true,
+                                              pageTransitionAnimation:
+                                                  PageTransitionAnimation.fade,
+                                            );
+                                          },
                                           child: const Text(
                                             "Ya",
                                             style: TextStyle(
@@ -341,71 +375,150 @@ class TicketContainer extends StatelessWidget {
                                       ],
                                     ));
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.highlight_remove_rounded,
-                            color: const Color.fromARGB(255, 162, 24, 15),
+                            color: Color.fromARGB(255, 162, 24, 15),
                           ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: IconButton(
-                          constraints: BoxConstraints(),
-                          padding: EdgeInsets.only(top: 2),
+                          constraints: const BoxConstraints(),
+                          padding: const EdgeInsets.only(top: 2),
                           alignment: Alignment.topLeft,
                           onPressed: () {
                             showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title: const Text(
-                                        "Reschedule",
-                                        style: TextStyle(
-                                          color: slate900,
-                                          fontFamily: "Poppins",
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                              context: context,
+                              builder: (context) => Dialog(
+                                child: Container(
+                                  height: widget.size.height * (1 / 3),
+                                  width: widget.size.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(36),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Choose Date",
+                                          style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: slate600,
+                                          ),
                                         ),
-                                      ),
-                                      content: const Text(
-                                        "Apakah kamu yakin untuk reschedule ticket ini?",
-                                        style: TextStyle(
-                                          color: slate900,
-                                          fontFamily: "Poppins",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
+                                        EasyDateTimeLine(
+                                          initialDate: DateTime.now(),
+                                          onDateChange: (selectedDate) {
+                                            setState(() {
+                                              newTanggal =
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(selectedDate);
+                                            });
                                           },
-                                          child: const Text(
-                                            "Tidak",
-                                            style: TextStyle(
-                                              color: slate900,
-                                              fontFamily: "Poppins",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
+                                          activeColor: Colors.blue,
+                                          headerProps: const EasyHeaderProps(
+                                            padding: EdgeInsets.zero,
+                                            selectedDateFormat:
+                                                SelectedDateFormat
+                                                    .fullDateDMonthAsStrY,
+                                            monthPickerType:
+                                                MonthPickerType.dropDown,
+                                          ),
+                                          dayProps: const EasyDayProps(
+                                            height: 48.0,
+                                            width: 48.0,
+                                            dayStructure:
+                                                DayStructure.dayStrDayNum,
+                                            inactiveDayStyle: DayStyle(
+                                              dayNumStyle: TextStyle(
+                                                fontSize: 14.0,
+                                              ),
+                                            ),
+                                            activeDayStyle: DayStyle(
+                                              dayNumStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                        TextButton(
-                                          onPressed: () {},
-                                          child: const Text(
-                                            "Ya",
-                                            style: TextStyle(
-                                              color: blue600,
-                                              fontFamily: "Poppins",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {
+                                                if (DateTime.parse(newTanggal)
+                                                        .millisecondsSinceEpoch <
+                                                    DateTime.parse(DateFormat(
+                                                                'yyyy-MM-dd')
+                                                            .format(
+                                                                DateTime.now()))
+                                                        .millisecondsSinceEpoch) {
+                                                  Navigator.of(context).pop();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(showSnackBar(
+                                                          "Error",
+                                                          "Tanggal reschedule salah!",
+                                                          ContentType.warning));
+                                                } else {
+                                                  TicketRepository()
+                                                      .rescheduleTicket(
+                                                          widget
+                                                              .ticket.idTicket!,
+                                                          newTanggal);
+                                                  PersistentNavBarNavigator
+                                                      .pushNewScreen(
+                                                    context,
+                                                    screen: const Navigation(
+                                                        index: 2),
+                                                    withNavBar: true,
+                                                    pageTransitionAnimation:
+                                                        PageTransitionAnimation
+                                                            .fade,
+                                                  );
+                                                }
+                                              },
+                                              child: const Text(
+                                                "Ubah",
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    color: green700,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
                                             ),
-                                          ),
-                                        ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text(
+                                                "Batal",
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    color: slate700,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            )
+                                          ],
+                                        )
                                       ],
-                                    ));
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.date_range,
                             color: green600,
                           ),
@@ -424,10 +537,9 @@ class TicketContainer extends StatelessWidget {
 
   saveIdTicket(String id) async {
     final prefs = await SharedPreferences.getInstance();
-    print(id);
     await prefs
         .setString('id_ticket', id)
-        .then((value) => print("Success set id ticket"))
-        .onError((error, stackTrace) => print("Error : $error"));
+        .then((value) => log("Success set id ticket "))
+        .onError((error, stackTrace) => log("Error : $error"));
   }
 }

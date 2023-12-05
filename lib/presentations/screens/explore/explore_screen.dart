@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
@@ -120,7 +122,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 24, bottom: 12),
+              padding: const EdgeInsets.only(left: 24, bottom: 12),
               child: SizedBox(
                 height: 36,
                 width: MediaQuery.of(context).size.width,
@@ -134,7 +136,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           sortType = typeDestination[index];
                           refresh();
                         });
-                        print(typeDestination[index]);
                       },
                       child: TypeContainer(
                         type: typeDestination[index],
@@ -154,7 +155,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 padding: const EdgeInsets.only(left: 24, right: 24),
                 child: GridView.builder(
                   itemCount: allDestinasi?.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 12,
                   ),
@@ -188,8 +189,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs
         .setString('id_destinasi', id)
-        .then((value) => print("Success set id destinasi $id"))
-        .onError((error, stackTrace) => print("Error : $error"));
+        .then((value) => log("Success set id destinasi $id"))
+        .onError((error, stackTrace) => log("Error : $error"));
   }
 
   List<String> typeDestination = [
@@ -214,8 +215,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs
         .setString('id_search', id)
-        .then((value) => print("Success set id search $id"))
-        .onError((error, stackTrace) => print("Error : $error"));
+        .then((value) => log("Success set id search $id"))
+        .onError((error, stackTrace) => log("Error : $error"));
   }
 }
 
@@ -244,7 +245,7 @@ class TypeContainer extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Text(
           type,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: "Poppins",
             fontSize: 12,
             fontWeight: FontWeight.w500,

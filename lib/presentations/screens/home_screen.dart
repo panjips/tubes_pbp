@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void refresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idUser = await prefs.getString('id_user');
+    String? idUser = prefs.getString('id_user');
     User? userData = await AuthRepository().showProfile(idUser!);
 
     List<Destinasi>? dataDestinasi =
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       allDestinasi = dataDestinasi;
       data = userData;
-      Future.delayed(Duration(seconds: 5));
+      Future.delayed(const Duration(seconds: 5));
     });
   }
 
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             Navigator.of(context, rootNavigator: true)
                                 .pushReplacement(MaterialPageRoute(
-                              builder: (context) => Navigation(
+                              builder: (context) => const Navigation(
                                 index: 1,
                               ),
                             ));
@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              Maps(),
+              const Maps(),
             ],
           ),
         ),
@@ -242,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs
         .setString('id_destinasi', id)
-        .then((value) => print("Success set id destinasi $id"))
-        .onError((error, stackTrace) => print("Error : $error"));
+        .then((value) => log("Success set id destinasi $id"))
+        .onError((error, stackTrace) => log("Error : $error"));
   }
 }
