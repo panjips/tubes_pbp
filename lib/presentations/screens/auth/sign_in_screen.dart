@@ -68,6 +68,7 @@ class SignInScreenState extends State<SignInScreen> {
                         fontSize: 34,
                         color: slate900,
                       ),
+                      key: Key("LoginSuccess"),
                     ),
                   ),
                 ],

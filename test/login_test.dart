@@ -9,13 +9,13 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    final usernameField = find.byKey(Key('Username'));
+    final usernameField = find.byKey(const Key('Username'));
     expect(usernameField, findsOneWidget);
 
-    final passwordField = find.byKey(Key('Password'));
+    final passwordField = find.byKey(const Key('Password'));
     expect(passwordField, findsOneWidget);
 
-    final buttonLogin = find.byKey(Key('loginButton'));
+    final buttonLogin = find.byKey(const Key('loginButton'));
     expect(buttonLogin, findsOneWidget);
 
     await tester.enterText(usernameField, 'trisna');
@@ -31,13 +31,13 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    final usernameField = find.byKey(Key('Username'));
+    final usernameField = find.byKey(const Key('Username'));
     expect(usernameField, findsOneWidget);
 
-    final passwordField = find.byKey(Key('Password'));
+    final passwordField = find.byKey(const Key('Password'));
     expect(passwordField, findsOneWidget);
 
-    final buttonLogin = find.byKey(Key('loginButton'));
+    final buttonLogin = find.byKey(const Key('loginButton'));
     expect(buttonLogin, findsOneWidget);
 
     await tester.enterText(usernameField, 'trisnaaaa');

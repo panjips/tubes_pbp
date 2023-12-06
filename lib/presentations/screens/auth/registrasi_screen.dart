@@ -108,7 +108,10 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                         return 'Email telah digunakan!';
                       }
                       return null;
-                    }, controller: email, hintText: "example@gmail.com"),
+                    },
+                        controller: email,
+                        hintText: "example@gmail.com",
+                        key: const Key("Email")),
                     labelInput(text: "Username", bottom: 4.0, top: 4.0),
                     inputForm((value) {
                       if (value == null || value.isEmpty) {
@@ -118,9 +121,13 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                         return 'Username telah digunakan!';
                       }
                       return null;
-                    }, controller: username, hintText: "example"),
+                    },
+                        controller: username,
+                        hintText: "example",
+                        key: const Key("Username")),
                     labelInput(text: "Password", bottom: 4.0, top: 4.0),
                     TextFormField(
+                      key: const Key("Password"),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password tidak boleh kosong!";
@@ -180,15 +187,22 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Nama Depan tidak boleh kosong!';
                       }
-                    }, controller: firstName, hintText: "Alex"),
+                    },
+                        controller: firstName,
+                        hintText: "Alex",
+                        key: const Key("FirstName")),
                     labelInput(text: "Nama Belakang", bottom: 4.0, top: 4.0),
                     inputForm((value) {
                       if (value == null || value.isEmpty) {
                         return 'Nama Belakang tidak boleh kosong!';
                       }
-                    }, controller: lastName, hintText: "Gilbert"),
+                    },
+                        controller: lastName,
+                        hintText: "Gilbert",
+                        key: const Key('LastName')),
                     labelInput(text: "Tanggal Lahir", bottom: 4.0, top: 4.0),
                     TextFormField(
+                      key: const Key("TanggalLahir"),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Tanggal Lahir Tidak Boleh Kosong';
@@ -276,6 +290,7 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                     ),
                     labelInput(text: "Jenis Kelamin", bottom: 4.0, top: 4.0),
                     DropdownButtonFormField2(
+                      key: const Key("JenisKelamin"),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Jenis kelamin tidak boleh kosong!';
@@ -342,6 +357,7 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
+                key: const Key("Dialog"),
                 title: const Text(
                   "Register",
                   style: TextStyle(
@@ -376,6 +392,7 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
                     ),
                   ),
                   TextButton(
+                    key: const Key("DialogYakin"),
                     onPressed: () async {
                       User user = User(
                           email: email.text,
@@ -413,7 +430,7 @@ class _RegistrasiScreenState extends State<RegistrasiScreen> {
               ),
             );
           }
-        }, size: size, text: "Sign up"),
+        }, size: size, text: "Sign up", key: const Key("RegisterButton")),
       ),
     );
   }

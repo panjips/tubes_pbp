@@ -5,10 +5,11 @@ TextFormField inputForm(
   Function(String?) validator, {
   required controller,
   required hintText,
+  key,
   obsecureText = false,
 }) {
   return TextFormField(
-    key: Key(hintText),
+    key: key,
     validator: (value) => validator(value),
     autovalidateMode: AutovalidateMode.onUserInteraction,
     obscureText: obsecureText,

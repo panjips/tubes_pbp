@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
-import 'package:test_slicing/data/repository/destinasi_respository.dart';
 import 'package:test_slicing/data/repository/ulasan_repository.dart';
 import 'package:test_slicing/utils/constant.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -47,7 +46,7 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
         ),
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             FeatherIcons.chevronLeft,
             size: 32,
             color: slate900,
@@ -63,7 +62,7 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Rating : ",
               style: TextStyle(
                   fontFamily: "Poppins",
@@ -79,12 +78,11 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
                     : double.parse(widget.editData!.rating!),
                 direction: Axis.horizontal,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) => Icon(
+                itemBuilder: (context, _) => const Icon(
                   Icons.star,
                   color: Colors.amber,
                 ),
                 onRatingUpdate: (value) {
-                  print(value);
 
                   setState(() {
                     rating = value;
@@ -92,8 +90,8 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
+            const Padding(
+              padding: EdgeInsets.only(top: 12),
               child: Text(
                 "Review : ",
                 style: TextStyle(
@@ -138,13 +136,11 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
             const EdgeInsets.only(top: 12, right: 24, left: 24, bottom: 24),
         child: ElevatedButton(
           onPressed: () async {
-            print(currentUser);
             Ulasan addUlasan = Ulasan(
                 idDestinasi: currentDestinasi,
                 idPengguna: currentUser,
                 rating: rating.toString(),
                 ulasan: review.text);
-            print(addUlasan);
             if (widget.editData == null) {
               // DestinasiRepositroy().addUlasan(currentDestinasi!, addUlasan);
               await UlasanRepository().tambahUlasan(addUlasan);
@@ -161,9 +157,9 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
           style: ButtonStyle(
             visualDensity: VisualDensity.adaptivePlatformDensity,
             enableFeedback: false,
-            overlayColor: MaterialStatePropertyAll(blue600),
+            overlayColor: const MaterialStatePropertyAll(blue600),
             splashFactory: NoSplash.splashFactory,
-            backgroundColor: MaterialStatePropertyAll(blue500),
+            backgroundColor: const MaterialStatePropertyAll(blue500),
             shape: MaterialStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -173,7 +169,7 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
               Size(size.width, 48.0),
             ),
           ),
-          child: Text(
+          child: const Text(
             "Post",
             style: TextStyle(
               fontSize: 14,
@@ -188,8 +184,8 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
 
   void getId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? idDestinasi = await prefs.getString('id_destinasi');
-    String? idUser = await prefs.getString('id_user');
+    String? idDestinasi = prefs.getString('id_destinasi');
+    String? idUser = prefs.getString('id_user');
     setState(() {
       currentDestinasi = idDestinasi;
       currentUser = idUser;

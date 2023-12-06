@@ -44,7 +44,7 @@ class CardDestination extends StatelessWidget {
               margin: const EdgeInsets.only(top: 6, bottom: 2),
               child: Text(
                 nama,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -56,16 +56,16 @@ class CardDestination extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   FeatherIcons.mapPin,
                   size: 12,
                   color: slate400,
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 2),
+                  margin: const EdgeInsets.only(left: 2),
                   child: Text(
                     alamat,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 10,
                       fontWeight: FontWeight.normal,
