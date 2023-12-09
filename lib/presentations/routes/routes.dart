@@ -14,4 +14,7 @@ class Routes {
   static const String ulasanEachDestination = "/ulasan";
   static const String writeUlasan = "/tambah_ulasan";
   static const String orderSuccess = "/order_success";
+  static const String transportasi = "/transportasi";
+  static const String orderTransportasi = "/order_transportasi";
+  static const String orderTransportasiSuccess = "/order_transportasi_success";
 }

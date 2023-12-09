@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/ticket.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
+import 'package:test_slicing/presentations/screens/transportasi/order_transportasi.dart';
 import 'package:test_slicing/presentations/widgets/snackbar.dart';
 import 'package:test_slicing/utils/constant.dart';
 import 'package:test_slicing/data/repository/ticket_repository.dart';
@@ -384,8 +385,72 @@ class _OrderTicketScreenState extends State<OrderTicketScreen> {
                             // ignore: use_build_context_synchronously
                             saveIdTicket(uuid);
                             // ignore: use_build_context_synchronously
-                            Navigator.of(context, rootNavigator: true)
-                                .pushReplacementNamed('/order_success');
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text(
+                                  "Transportation",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 20,
+                                    color: slate900,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                content: const Text(
+                                  "Apakah kamu ingin menambah transportasi ke tujuan?",
+                                  style: TextStyle(
+                                    color: slate900,
+                                    fontFamily: "Poppins",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pushReplacement(
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation1,
+                                                  animation2) =>
+                                              const OrderTransportasi(
+                                                  isBuyTicket: true),
+                                          transitionDuration: Duration.zero,
+                                          reverseTransitionDuration:
+                                              Duration.zero,
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      "Tidak",
+                                      style: TextStyle(
+                                        color: slate900,
+                                        fontFamily: "Poppins",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pushReplacementNamed(
+                                              '/order_transportasi');
+                                    },
+                                    child: const Text(
+                                      "Ya",
+                                      style: TextStyle(
+                                        color: blue600,
+                                        fontFamily: "Poppins",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
                           }
                         },
                         style: ButtonStyle(

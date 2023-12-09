@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
@@ -216,6 +217,21 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
 
   @override
   Widget build(BuildContext context) {
+    if (userReview == null) {
+      return Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          width: widget.size.width * 0.6,
+          height: widget.size.height * (1 / 7),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+            boxShadow: shadowMd,
+          ),
+        ),
+      );
+    }
     return Container(
       width: widget.size.width,
       decoration: BoxDecoration(
@@ -240,9 +256,8 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: CachedNetworkImage(
-                          imageUrl: userReview == null
-                              ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                              : userReview!.urlPhoto!,
+                          imageUrl: userReview!.urlPhoto ??
+                              'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.',
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
                           httpHeaders: const {
@@ -369,8 +384,6 @@ class _UlasanVerticalCardState extends State<UlasanVerticalCard> {
                                   textAlign: TextAlign.start,
                                 ),
                                 onPressed: () async {
-                                  // await DestinasiRepositroy().deleteUlasan(
-                                  //     currentDestinasi!, widget.ulasan);
                                   await UlasanRepository()
                                       .deleteUlasan(widget.ulasan.id!);
                                   // ignore: use_build_context_synchronously

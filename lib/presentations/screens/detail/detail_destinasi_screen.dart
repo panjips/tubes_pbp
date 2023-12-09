@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/user.dart';
 import 'package:test_slicing/data/repository/auth_repository.dart';
 import 'package:test_slicing/data/repository/destinasi_respository.dart';
 import 'package:test_slicing/data/repository/ulasan_repository.dart';
+import 'package:test_slicing/presentations/screens/transportasi/order_transportasi.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -304,33 +306,68 @@ class _DetailScreenState extends State<DetailScreen> {
       floatingActionButton: Padding(
         padding:
             const EdgeInsets.only(top: 12, right: 24, left: 24, bottom: 24),
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context, rootNavigator: true).pushNamed("/order");
-          },
-          style: ButtonStyle(
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            enableFeedback: false,
-            overlayColor: const MaterialStatePropertyAll(green700),
-            splashFactory: NoSplash.splashFactory,
-            backgroundColor: const MaterialStatePropertyAll(green600),
-            shape: MaterialStatePropertyAll(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+        child: Row(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pushNamed("/order");
+              },
+              style: ButtonStyle(
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+                enableFeedback: false,
+                overlayColor: const MaterialStatePropertyAll(green700),
+                splashFactory: NoSplash.splashFactory,
+                backgroundColor: const MaterialStatePropertyAll(green600),
+                shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                fixedSize: MaterialStateProperty.all(
+                  Size(size.width * (3 / 4) - 32, 48.0),
+                ),
+              ),
+              child: const Text(
+                "Beli Ticket",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Poppins",
+                ),
               ),
             ),
-            fixedSize: MaterialStateProperty.all(
-              Size(size.width - 32, 48.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pushReplacement(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          const OrderTransportasi(isBuyTicket: false),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
+                style: ButtonStyle(
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                  enableFeedback: false,
+                  overlayColor: const MaterialStatePropertyAll(blue500),
+                  splashFactory: NoSplash.splashFactory,
+                  backgroundColor: const MaterialStatePropertyAll(blue600),
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  fixedSize: MaterialStateProperty.all(
+                    Size(size.width * (1 / 4) - 32, 48.0),
+                  ),
+                ),
+                child: const Icon(CupertinoIcons.car_detailed),
+              ),
             ),
-          ),
-          child: const Text(
-            "Beli Ticket",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Poppins",
-            ),
-          ),
+          ],
         ),
       ),
     );
@@ -369,6 +406,20 @@ class _UlasanCardState extends State<UlasanCard> {
 
   @override
   Widget build(BuildContext context) {
+    if (userReview == null) {
+      return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: widget.size.width * 0.6,
+            height: widget.size.height * (1 / 7),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: shadowMd,
+            ),
+          ));
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Container(
@@ -388,9 +439,8 @@ class _UlasanCardState extends State<UlasanCard> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: CachedNetworkImage(
-                        imageUrl: userReview == null
-                            ? 'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.'
-                            : userReview!.urlPhoto!,
+                        imageUrl: userReview!.urlPhoto ??
+                            'https://firebasestorage.googleapis.com/v0/b/final-project-pbp.appspot.com/o/avatar-icon.png?alt=media&token=9927b326-a030-4ee1-97cc-eb66165ec05a&_gl=1*eidyur*_ga*MTYzNTI5NjU5LjE2OTU5MDYwOTI.*_ga_CW55HF8NVT*MTY5OTE5MTU5Ny4zMy4xLjE2OTkxOTE3MTUuOC4wLjA.',
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
                         httpHeaders: const {

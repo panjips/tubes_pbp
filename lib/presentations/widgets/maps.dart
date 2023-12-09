@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:test_slicing/utils/constant.dart';
 
 class Maps extends StatefulWidget {
@@ -17,7 +21,8 @@ class _MapsState extends State<Maps> {
   void _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-
+    await saveLatitude(position.latitude.toString());
+    await saveLongitude(position.longitude.toString());
     setState(() {
       _position = position;
     });
@@ -83,10 +88,38 @@ class _MapsState extends State<Maps> {
                           ])
                         ],
                       )
-                    : const Center(child: CircularProgressIndicator()),
+                    : Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * (1 / 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: shadowMd,
+                          ),
+                        ),
+                      ),
               ],
             ),
           )),
     );
+  }
+
+  saveLatitude(String latitude) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs
+        .setString('latitude', latitude)
+        .then((value) => log("Success set latitude $latitude"))
+        .onError((error, stackTrace) => log("Error : $error"));
+  }
+
+  saveLongitude(String longitude) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs
+        .setString('longitude', longitude)
+        .then((value) => log("Success set Longitude $longitude"))
+        .onError((error, stackTrace) => log("Error : $error"));
   }
 }

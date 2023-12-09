@@ -1,10 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_slicing/data/model/destinasi.dart';
 import 'package:test_slicing/data/model/ticket.dart';
@@ -345,22 +346,40 @@ class _TicketContainerState extends State<TicketContainer> {
                                         ),
                                         TextButton(
                                           onPressed: () async {
-                                            TicketRepository().deleteTicket(
-                                                widget.ticket.idTicket!);
+                                            await TicketRepository()
+                                                .deleteTicket(
+                                                    widget.ticket.idTicket!);
                                             ScaffoldMessenger.of(context)
-                                                .showSnackBar(showSnackBar(
-                                                    "Success!",
-                                                    "Berhasil delete ticket!",
-                                                    ContentType.success));
-                                            PersistentNavBarNavigator
-                                                .pushNewScreen(
-                                              context,
-                                              screen:
-                                                  const Navigation(index: 2),
-                                              withNavBar: true,
-                                              pageTransitionAnimation:
-                                                  PageTransitionAnimation.fade,
+                                                .showSnackBar(
+                                              showSnackBar(
+                                                  "Success!",
+                                                  "Berhasil delete ticket!",
+                                                  ContentType.success),
                                             );
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              PageRouteBuilder(
+                                                pageBuilder: (context,
+                                                        animation1,
+                                                        animation2) =>
+                                                    const Navigation(
+                                                  index: 2,
+                                                ),
+                                                transitionDuration:
+                                                    Duration.zero,
+                                                reverseTransitionDuration:
+                                                    Duration.zero,
+                                              ),
+                                            );
+                                            // PersistentNavBarNavigator
+                                            //     .pushNewScreen(
+                                            //   context,
+                                            //   screen:
+                                            //       const Navigation(index: 2),
+                                            //   withNavBar: false,
+                                            //   pageTransitionAnimation:
+                                            //       PageTransitionAnimation.fade,
+                                            // );
                                           },
                                           child: const Text(
                                             "Ya",
@@ -404,7 +423,7 @@ class _TicketContainerState extends State<TicketContainer> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         const Text(
-                                          "Choose Date",
+                                          "Reschedule Ticket",
                                           style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontWeight: FontWeight.bold,
@@ -454,7 +473,7 @@ class _TicketContainerState extends State<TicketContainer> {
                                               MainAxisAlignment.end,
                                           children: [
                                             TextButton(
-                                              onPressed: () {
+                                              onPressed: () async {
                                                 if (DateTime.parse(newTanggal)
                                                         .millisecondsSinceEpoch <
                                                     DateTime.parse(DateFormat(
@@ -469,21 +488,36 @@ class _TicketContainerState extends State<TicketContainer> {
                                                           "Tanggal reschedule salah!",
                                                           ContentType.warning));
                                                 } else {
-                                                  TicketRepository()
+                                                  await TicketRepository()
                                                       .rescheduleTicket(
                                                           widget
                                                               .ticket.idTicket!,
                                                           newTanggal);
-                                                  PersistentNavBarNavigator
-                                                      .pushNewScreen(
-                                                    context,
-                                                    screen: const Navigation(
-                                                        index: 2),
-                                                    withNavBar: true,
-                                                    pageTransitionAnimation:
-                                                        PageTransitionAnimation
-                                                            .fade,
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                    PageRouteBuilder(
+                                                      pageBuilder: (context,
+                                                              animation1,
+                                                              animation2) =>
+                                                          const Navigation(
+                                                        index: 2,
+                                                      ),
+                                                      transitionDuration:
+                                                          Duration.zero,
+                                                      reverseTransitionDuration:
+                                                          Duration.zero,
+                                                    ),
                                                   );
+                                                  // PersistentNavBarNavigator
+                                                  //     .pushNewScreen(
+                                                  //   context,
+                                                  //   screen: const Navigation(
+                                                  //       index: 2),
+                                                  //   withNavBar: true,
+                                                  //   pageTransitionAnimation:
+                                                  //       PageTransitionAnimation
+                                                  //           .fade,
+                                                  // );
                                                 }
                                               },
                                               child: const Text(

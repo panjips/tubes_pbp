@@ -12,6 +12,9 @@ import 'package:test_slicing/presentations/screens/order/order_success.dart';
 import 'package:test_slicing/presentations/screens/order/order_ticket_screen.dart';
 import 'package:test_slicing/presentations/screens/profile/edit_profile_screen.dart';
 import 'package:test_slicing/presentations/screens/profile/profile_screen.dart';
+import 'package:test_slicing/presentations/screens/transportasi/order_transportasi.dart';
+import 'package:test_slicing/presentations/screens/transportasi/order_transportasi_success.dart';
+import 'package:test_slicing/presentations/screens/transportasi/transportasi_screen.dart';
 import 'package:test_slicing/presentations/screens/ulasan/tambah_ulasan_screen.dart';
 import 'package:test_slicing/presentations/screens/ulasan/ulasan_screen.dart';
 import 'firebase_options.dart';
@@ -47,6 +50,10 @@ class MyApp extends StatelessWidget {
         Routes.ulasanEachDestination: (context) => const UlasanScreen(),
         Routes.writeUlasan: (context) => const TambahUlasanScreen(),
         Routes.orderSuccess: (context) => const SuccessOrderScreen(),
+        Routes.transportasi: (context) => const Transportasi(),
+        Routes.orderTransportasi: (context) => const OrderTransportasi(),
+        Routes.orderTransportasiSuccess: (context) =>
+            const TransportasiSuccessOrderScreen(),
       },
     );
   }

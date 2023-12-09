@@ -402,7 +402,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             // ignore: use_build_context_synchronously
             PersistentNavBarNavigator.pushNewScreen(
               context,
-              screen: const Navigation(index: 3),
+              screen: const Navigation(index: 4),
               withNavBar: true,
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             );

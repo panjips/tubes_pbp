@@ -9,9 +9,8 @@ import 'package:test_slicing/data/model/user.dart';
 import 'package:http_parser/http_parser.dart';
 
 class AuthRepository {
-  static const String url = '10.0.2.2:8000';
-  // static final String url = '192.168.51.189:8000';
-  // static final String url = 'pbp-pariwisata-api.000webhostapp.com';
+  static const String url = 'api-pariwisata.my.id';
+  // static const String url = '10.0.2.2:8000';
   static const String endpoint = '/api/';
 
   final dbFirebase = FirebaseFirestore.instance;

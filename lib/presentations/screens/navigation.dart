@@ -6,6 +6,7 @@ import 'package:test_slicing/presentations/screens/explore/explore_screen.dart';
 import 'package:test_slicing/presentations/screens/home_screen.dart';
 import 'package:test_slicing/presentations/screens/profile/profile_screen.dart';
 import 'package:test_slicing/presentations/screens/ticket/ticket_screen.dart';
+import 'package:test_slicing/presentations/screens/transportasi/transportasi_screen.dart';
 
 class Navigation extends StatefulWidget {
   final int? index;
@@ -30,6 +31,7 @@ class _NavigationState extends State<Navigation> {
       HomeScreen(),
       ExploreScreen(),
       TicketScreen(),
+      Transportasi(),
       ProfileScreen(),
     ];
   }
@@ -68,6 +70,12 @@ class _NavigationState extends State<Navigation> {
       PersistentBottomNavBarItem(
         icon: const Icon(CupertinoIcons.tickets),
         title: ("Ticket"),
+        activeColorPrimary: CupertinoColors.activeBlue,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.car),
+        title: ("Transport"),
         activeColorPrimary: CupertinoColors.activeBlue,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
