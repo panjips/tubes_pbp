@@ -83,7 +83,6 @@ class TambahUlasanScreenState extends State<TambahUlasanScreen> {
                   color: Colors.amber,
                 ),
                 onRatingUpdate: (value) {
-
                   setState(() {
                     rating = value;
                   });

@@ -90,6 +90,7 @@ class SignInScreenState extends State<SignInScreen> {
                             },
                             controller: username,
                             hintText: "Username",
+                            key: const Key("Username"),
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 8),

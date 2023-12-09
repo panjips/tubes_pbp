@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -400,7 +402,6 @@ class _TransportContainerState extends State<TransportContainer> {
                 onPressed: () async {
                   await TransportRepository()
                       .deleteTransport(widget.data.idTransport!);
-                  // ignore: use_build_context_synchronously
                   PersistentNavBarNavigator.pushNewScreen(
                     context,
                     withNavBar: false,
