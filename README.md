@@ -1,16 +1,11 @@
-# tubes_pbp
+# Kelompok 10
 
-A new Flutter project.
+Proses development ada di branch mainApi ( log commit )
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Kelas : Pemrograman Berbasis Platform C
+# Anggota Kelompok : 
+- Juneta Julia (210711382)
+- Intan Setyo Ari Dewi (210711129)
+- I Made Panji Pusaka Suryeswara (210711397)
+- Simen Ngui (210711402)
+- FIDELIS VENDRIKO GERARDY (210711404)
